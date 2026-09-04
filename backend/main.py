@@ -162,7 +162,7 @@ def blast_radius():
         # time in practice (e.g. Groq's daily token quota running out).
         data["llm_annotated"] = False
         data["llm_configured"] = bool(os.environ.get("GROQ_API_KEY"))
-        data["llm_error"] = str(e)
+        data["llm_error"] = llm.describe_error(e)
     return data
 
 

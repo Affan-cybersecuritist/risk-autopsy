@@ -30,6 +30,21 @@ def _client() -> Groq:
     return Groq(api_key=key)
 
 
+def describe_error(e: Exception) -> str:
+    """A short, human-readable summary of an LLM-call failure for display
+    in the UI - the Groq SDK's str(e) on a RateLimitError is a raw nested
+    dict repr several lines long, which reads as a broken app rather than
+    an honest degraded state when shown directly to a reviewer."""
+    name = type(e).__name__
+    if name == "RateLimitError":
+        return "the AI provider's daily quota is exhausted for now"
+    if name in ("APIConnectionError", "APITimeoutError"):
+        return "could not reach the AI provider (network/timeout)"
+    if name == "AuthenticationError":
+        return "the configured API key was rejected"
+    return f"AI call failed ({name})"
+
+
 _MOJIBAKE_FIXES = {
     "â€‘": "-", "â€’": "-",  # en/em dash occasionally mis-decoded as UTF-8-in-Latin-1
     "â€“": "-", "â€”": "-",

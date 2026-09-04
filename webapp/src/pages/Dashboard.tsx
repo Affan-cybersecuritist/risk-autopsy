@@ -1192,7 +1192,7 @@ export default function Dashboard() {
               </div>
 
               <div className="rounded-xl px-4 py-3.5" style={{ background: 'rgba(43,93,94,0.06)' }}>
-                <div className="font-bold text-sm mb-1.5">AI Autopsy Agent {!agentResult.autopsy.llm_available && <span className="text-neutral-400 font-normal">(Groq key not configured — degraded)</span>}</div>
+                <div className="font-bold text-sm mb-1.5">AI Autopsy Agent {!agentResult.autopsy.llm_available && <span className="text-neutral-400 font-normal">(degraded — see note below)</span>}</div>
                 <div className="text-sm text-neutral-700 mb-1"><b>{agentResult.autopsy.failure_type}</b> — confidence {(agentResult.autopsy.confidence * 100).toFixed(0)}%</div>
                 <div className="text-sm text-neutral-600 mb-2">{agentResult.autopsy.root_cause}</div>
                 {agentResult.autopsy.missed_signals.length > 0 && (

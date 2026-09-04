@@ -1,6 +1,6 @@
 {
-  "generated_at": 1788449302.3335495,
-  "duration_seconds": 10.7,
+  "generated_at": 1788539502.3807926,
+  "duration_seconds": 3.4,
   "discovery": {
     "candidates_tested": [
       {
@@ -52,195 +52,15 @@
     "method": "RandomForestClassifier(n_estimators=300, max_depth=6), feature_importances_, acceptance threshold 0.015"
   },
   "autopsy": {
-    "failure_type": "recall drift from untested fast\u2011strike rings",
-    "root_cause": "The deployed rule only triggers when max_amount > 7,964 and time_to_escalation > 7 days. The attacker search never sampled time_to_escalation below 10 days, so the model never saw fast\u2011strike behavior, causing recall to collapse as real rings move to shorter escalation times. The drift monitor confirms this gap.",
-    "missed_signals": [
-      "time_to_escalation",
-      "escalation_ratio"
-    ],
-    "existing_control_failure": "Because the policy relies on a high time_to_escalation threshold, it fails to flag rings that act quickly, even when other risk signals are strong.",
-    "candidate_features": [
-      "time_to_escalation",
-      "escalation_ratio",
-      "amount_velocity",
-      "ring_density",
-      "dual_sharing_signal",
-      "age_to_escalation_gap"
-    ],
-    "confidence": 0.86,
-    "llm_available": true
+    "failure_type": "unavailable",
+    "root_cause": "AI-narrated root cause unavailable right now (the Groq call failed) - feature discovery and policy verification below used no LLM call and are unaffected.",
+    "missed_signals": [],
+    "existing_control_failure": "unavailable",
+    "candidate_features": [],
+    "confidence": 0.0,
+    "llm_available": false
   },
   "candidates": [
-    {
-      "hypothesis": {
-        "name": "AmountVelocityHybrid",
-        "features": [
-          "max_amount",
-          "amount_velocity",
-          "ring_density",
-          "escalation_ratio"
-        ],
-        "rationale": "Combines amount magnitude with velocity and ring structure to catch fast\u2011strike rings with high spend bursts",
-        "hypothesis_statement": "Because fast\u2011strike rings use high amounts in short bursts, adding amount_velocity and ring_density alongside max_amount and escalation_ratio will detect these attacks that the current high\u2011time threshold overlooks.",
-        "llm_generated": true
-      },
-      "x_cols": [
-        "max_amount",
-        "amount_velocity",
-        "ring_density",
-        "escalation_ratio"
-      ],
-      "harden_generations": 3,
-      "harden_converged": true,
-      "verify": {
-        "regression": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "fp": 0,
-          "loss_prevented": 1463001.7295545326,
-          "total_test_loss": 1463001.7295545328
-        },
-        "adversarial": {
-          "evasions_found": 0,
-          "search_size": 2000,
-          "coverage_pct": 100.0
-        },
-        "fairness": {
-          "overall_fp_rate": 0.0003333333333333333,
-          "n_segments_flagged": 2,
-          "flagged_segments": [
-            {
-              "segment": "account_age_band=11-20d",
-              "n": 640,
-              "fp_rate": 0.0015625,
-              "ratio_vs_population": 4.6875,
-              "severe": false
-            },
-            {
-              "segment": "amount_band=5-15k",
-              "n": 52,
-              "fp_rate": 0.019230769230769232,
-              "ratio_vs_population": 57.6923076923077,
-              "severe": false
-            }
-          ],
-          "has_severe_flag": false
-        },
-        "blast_radius": {
-          "n_newly_flagged": 20,
-          "n_newly_cleared": 57,
-          "newly_flagged_loss_at_stake": 271122.18997626164,
-          "worth_reviewing_count": 0
-        },
-        "off_policy": {
-          "dr_value_per_customer": 1317.828025597657,
-          "dm_value_per_customer": 1274.4551967088885,
-          "dr_dm_agreement_pct": 96.7087641169123
-        },
-        "evasion_distance": {
-          "minimum_distance": null,
-          "dimensions": null,
-          "perturbed_point": null,
-          "original_point": {
-            "n_purchases_before_max": 2,
-            "low_amount": 1500,
-            "mid_amount": 20000,
-            "time_to_escalation": 20,
-            "device_sharing": 2,
-            "address_sharing": 2
-          },
-          "per_dimension_single_axis_distance": {
-            "mid_amount": null,
-            "device_sharing": null,
-            "address_sharing": null,
-            "time_to_escalation": null
-          },
-          "note": "No single- or paired-dimension perturbation within the searched realistic range evaded this policy - this pattern is robustly caught."
-        },
-        "economic_value": {
-          "candidate_net_value": 1463001.7295545328,
-          "baseline_net_value": 1463001.7295545328
-        },
-        "complexity": {
-          "depth": 4,
-          "n_nodes": 9,
-          "n_features": 4
-        }
-      },
-      "readiness": {
-        "gates": [
-          {
-            "name": "Historical regression",
-            "detail": "precision 100.0%, recall 100.0% on held-out test set",
-            "passed": true,
-            "threshold": "precision >= 85% (this project's v1 baseline), recall >= 95%"
-          },
-          {
-            "name": "Adversarial coverage",
-            "detail": "100.0% of a fresh 2000-candidate realistic-archetype attack caught",
-            "passed": true,
-            "threshold": "coverage >= 90%"
-          },
-          {
-            "name": "Fairness",
-            "detail": "2 segment(s) flagged, severe=False",
-            "passed": true,
-            "threshold": "no segment with both >5x ratio AND >2% absolute FP rate"
-          },
-          {
-            "name": "Off-policy confidence",
-            "detail": "DR/DM agreement 96.7%",
-            "passed": true,
-            "threshold": "DR/DM agreement >= 80%"
-          },
-          {
-            "name": "Blast radius",
-            "detail": "0 flip(s) worth a human's attention",
-            "passed": true,
-            "threshold": "<= 15 flips worth review (else too large to hand-review before approval)"
-          },
-          {
-            "name": "Complexity",
-            "detail": "tree depth 4, 9 nodes, 4 feature(s)",
-            "passed": true,
-            "threshold": "depth <= 8 (an approver must be able to read the rule)"
-          },
-          {
-            "name": "Minimum evasion distance",
-            "detail": "no evasion found within the searched realistic range - fully robust to this search",
-            "passed": true,
-            "threshold": ">= 0.15 normalized units (or no evasion found at all)"
-          },
-          {
-            "name": "Economic value",
-            "detail": "Rs 1,463,002 vs currently-hardened policy's Rs 1,463,002",
-            "passed": true,
-            "threshold": "candidate's real Rs net value >= currently-hardened policy's"
-          }
-        ],
-        "breakdown": {
-          "regression": 100,
-          "adversarial": 100.0,
-          "fairness": 50,
-          "blast_radius": 100,
-          "complexity": 100,
-          "dr_confidence": 96.7
-        },
-        "weights": {
-          "regression": 0.3,
-          "adversarial": 0.25,
-          "fairness": 0.2,
-          "blast_radius": 0.1,
-          "complexity": 0.05,
-          "dr_confidence": 0.1
-        },
-        "overall_score": 89.7,
-        "status": "APPROVAL_ELIGIBLE",
-        "blocked_reasons": []
-      },
-      "rule_text": "|--- max_amount <= 7964.10\n|   |--- class: 0\n|--- max_amount >  7964.10\n|   |--- escalation_ratio <= 1.97\n|   |   |--- class: 0\n|   |--- escalation_ratio >  1.97\n|   |   |--- ring_density <= 1.50\n|   |   |   |--- max_amount <= 17023.56\n|   |   |   |   |--- class: 1\n|   |   |   |--- max_amount >  17023.56\n|   |   |   |   |--- class: 1\n|   |   |--- ring_density >  1.50\n|   |   |   |--- class: 1\n",
-      "failed": false
-    },
     {
       "hypothesis": {
         "name": "full feature set (baseline)",
@@ -429,17 +249,17 @@
       "hypothesis": {
         "name": "SpeedFocus",
         "features": [
-          "time_to_escalation",
           "escalation_ratio",
+          "time_to_escalation",
           "age_to_escalation_gap"
         ],
-        "rationale": "Targets the timing gap that the current rule misses",
-        "hypothesis_statement": "The current policy underweights rapid escalation signals, so adding time_to_escalation, escalation_ratio, and age_to_escalation_gap will improve detection of fast\u2011strike rings.",
+        "rationale": "Targets how quickly suspicious activity escalates relative to account age.",
+        "hypothesis_statement": "Current policy underweights the rapid escalation of risk, so a tree using escalation_ratio, time_to_escalation, and age_to_escalation_gap will better capture fast\u2011moving fraud patterns.",
         "llm_generated": true
       },
       "x_cols": [
-        "time_to_escalation",
         "escalation_ratio",
+        "time_to_escalation",
         "age_to_escalation_gap"
       ],
       "harden_generations": 7,
@@ -470,9 +290,9 @@
           "worth_reviewing_count": 53
         },
         "off_policy": {
-          "dr_value_per_customer": 1370.0148892230343,
-          "dm_value_per_customer": 1319.3713446530478,
-          "dr_dm_agreement_pct": 96.30343108447954
+          "dr_value_per_customer": 1382.5930845080468,
+          "dm_value_per_customer": 1331.588933243294,
+          "dr_dm_agreement_pct": 96.31097885564711
         },
         "evasion_distance": {
           "minimum_distance": 0.4027,
@@ -505,7 +325,7 @@
         },
         "complexity": {
           "depth": 6,
-          "n_nodes": 29,
+          "n_nodes": 27,
           "n_features": 3
         }
       },
@@ -543,7 +363,7 @@
           },
           {
             "name": "Complexity",
-            "detail": "tree depth 6, 29 nodes, 3 feature(s)",
+            "detail": "tree depth 6, 27 nodes, 3 feature(s)",
             "passed": true,
             "threshold": "depth <= 8 (an approver must be able to read the rule)"
           },
@@ -584,7 +404,185 @@
           "Economic value failed: Rs 1,420,602 vs currently-hardened policy's Rs 1,463,002 (needs candidate's real Rs net value >= currently-hardened policy's)"
         ]
       },
-      "rule_text": "|--- escalation_ratio <= 6.70\n|   |--- escalation_ratio <= 2.87\n|   |   |--- escalation_ratio <= 1.00\n|   |   |   |--- class: 0\n|   |   |--- escalation_ratio >  1.00\n|   |   |   |--- class: 0\n|   |--- escalation_ratio >  2.87\n|   |   |--- age_to_escalation_gap <= 11.50\n|   |   |   |--- time_to_escalation <= 29.50\n|   |   |   |   |--- time_to_escalation <= 0.50\n|   |   |   |   |   |--- class: 0\n|   |   |   |   |--- time_to_escalation >  0.50\n|   |   |   |   |   |--- escalation_ratio <= 4.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |   |--- escalation_ratio >  4.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |--- time_to_escalation >  29.50\n|   |   |   |   |--- class: 0\n|   |   |--- age_to_escalation_gap >  11.50\n|   |   |   |--- escalation_ratio <= 2.89\n|   |   |   |   |--- class: 0\n|   |   |   |--- escalation_ratio >  2.89\n|   |   |   |   |--- class: 0\n|--- escalation_ratio >  6.70\n|   |--- age_to_escalation_gap <= 11.50\n|   |   |--- time_to_escalation <= 31.00\n|   |   |   |--- time_to_escalation <= 0.50\n|   |   |   |   |--- class: 0\n|   |   |   |--- time_to_escalation >  0.50\n|   |   |   |   |--- escalation_ratio <= 10.37\n|   |   |   |   |   |--- time_to_escalation <= 11.00\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |   |--- time_to_escalation >  11.00\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |--- escalation_ratio >  10.37\n|   |   |   |   |   |--- escalation_ratio <= 12.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |   |--- escalation_ratio >  12.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |--- time_to_escalation >  31.00\n|   |   |   |--- class: 0\n|   |--- age_to_escalation_gap >  11.50\n|   |   |--- class: 0\n",
+      "rule_text": "|--- escalation_ratio <= 6.70\n|   |--- escalation_ratio <= 2.87\n|   |   |--- class: 0\n|   |--- escalation_ratio >  2.87\n|   |   |--- age_to_escalation_gap <= 11.50\n|   |   |   |--- time_to_escalation <= 29.50\n|   |   |   |   |--- time_to_escalation <= 0.50\n|   |   |   |   |   |--- class: 0\n|   |   |   |   |--- time_to_escalation >  0.50\n|   |   |   |   |   |--- escalation_ratio <= 4.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |   |--- escalation_ratio >  4.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |--- time_to_escalation >  29.50\n|   |   |   |   |--- class: 0\n|   |   |--- age_to_escalation_gap >  11.50\n|   |   |   |--- age_to_escalation_gap <= 12.50\n|   |   |   |   |--- class: 0\n|   |   |   |--- age_to_escalation_gap >  12.50\n|   |   |   |   |--- class: 0\n|--- escalation_ratio >  6.70\n|   |--- age_to_escalation_gap <= 11.50\n|   |   |--- time_to_escalation <= 31.00\n|   |   |   |--- time_to_escalation <= 0.50\n|   |   |   |   |--- class: 0\n|   |   |   |--- time_to_escalation >  0.50\n|   |   |   |   |--- escalation_ratio <= 10.37\n|   |   |   |   |   |--- time_to_escalation <= 11.00\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |   |--- time_to_escalation >  11.00\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |--- escalation_ratio >  10.37\n|   |   |   |   |   |--- escalation_ratio <= 12.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |   |   |   |--- escalation_ratio >  12.26\n|   |   |   |   |   |   |--- class: 1\n|   |   |--- time_to_escalation >  31.00\n|   |   |   |--- class: 0\n|   |--- age_to_escalation_gap >  11.50\n|   |   |--- class: 0\n",
+      "failed": false
+    },
+    {
+      "hypothesis": {
+        "name": "AmountVelocityCombo",
+        "features": [
+          "max_amount",
+          "amount_velocity",
+          "ring_density"
+        ],
+        "rationale": "Combines amount magnitude with velocity and ring\u2011density signals for nuanced amount\u2011based risk.",
+        "hypothesis_statement": "Current controls focus on max_amount alone and ignore how quickly large amounts accumulate and the surrounding transaction ring; a tree using max_amount, amount_velocity, and ring_density will expose fraud that evades simple amount thresholds.",
+        "llm_generated": true
+      },
+      "x_cols": [
+        "max_amount",
+        "amount_velocity",
+        "ring_density"
+      ],
+      "harden_generations": 4,
+      "harden_converged": true,
+      "verify": {
+        "regression": {
+          "precision": 0.9795918367346939,
+          "recall": 1.0,
+          "fp": 1,
+          "loss_prevented": 1463001.7295545328,
+          "total_test_loss": 1463001.7295545328
+        },
+        "adversarial": {
+          "evasions_found": 3,
+          "search_size": 2000,
+          "coverage_pct": 99.85000000000001
+        },
+        "fairness": {
+          "overall_fp_rate": 0.002,
+          "n_segments_flagged": 3,
+          "flagged_segments": [
+            {
+              "segment": "account_age_band=11-20d",
+              "n": 640,
+              "fp_rate": 0.009375,
+              "ratio_vs_population": 4.6875,
+              "severe": false
+            },
+            {
+              "segment": "amount_band=5-15k",
+              "n": 52,
+              "fp_rate": 0.019230769230769232,
+              "ratio_vs_population": 9.615384615384615,
+              "severe": false
+            },
+            {
+              "segment": "amount_band=40k+",
+              "n": 34,
+              "fp_rate": 0.14705882352941177,
+              "ratio_vs_population": 73.52941176470588,
+              "severe": true
+            }
+          ],
+          "has_severe_flag": true
+        },
+        "blast_radius": {
+          "n_newly_flagged": 20,
+          "n_newly_cleared": 56,
+          "newly_flagged_loss_at_stake": 271122.18997626164,
+          "worth_reviewing_count": 0
+        },
+        "off_policy": {
+          "dr_value_per_customer": 1462.194921995337,
+          "dm_value_per_customer": 1384.8564358769872,
+          "dr_dm_agreement_pct": 94.71079505871077
+        },
+        "evasion_distance": {
+          "minimum_distance": null,
+          "dimensions": null,
+          "perturbed_point": null,
+          "original_point": {
+            "n_purchases_before_max": 2,
+            "low_amount": 1500,
+            "mid_amount": 20000,
+            "time_to_escalation": 20,
+            "device_sharing": 2,
+            "address_sharing": 2
+          },
+          "per_dimension_single_axis_distance": {
+            "mid_amount": null,
+            "device_sharing": null,
+            "address_sharing": null,
+            "time_to_escalation": null
+          },
+          "note": "No single- or paired-dimension perturbation within the searched realistic range evaded this policy - this pattern is robustly caught."
+        },
+        "economic_value": {
+          "candidate_net_value": 1462201.7295545328,
+          "baseline_net_value": 1463001.7295545328
+        },
+        "complexity": {
+          "depth": 4,
+          "n_nodes": 15,
+          "n_features": 3
+        }
+      },
+      "readiness": {
+        "gates": [
+          {
+            "name": "Historical regression",
+            "detail": "precision 98.0%, recall 100.0% on held-out test set",
+            "passed": true,
+            "threshold": "precision >= 85% (this project's v1 baseline), recall >= 95%"
+          },
+          {
+            "name": "Adversarial coverage",
+            "detail": "99.9% of a fresh 2000-candidate realistic-archetype attack caught",
+            "passed": true,
+            "threshold": "coverage >= 90%"
+          },
+          {
+            "name": "Fairness",
+            "detail": "3 segment(s) flagged, severe=True",
+            "passed": false,
+            "threshold": "no segment with both >5x ratio AND >2% absolute FP rate"
+          },
+          {
+            "name": "Off-policy confidence",
+            "detail": "DR/DM agreement 94.7%",
+            "passed": true,
+            "threshold": "DR/DM agreement >= 80%"
+          },
+          {
+            "name": "Blast radius",
+            "detail": "0 flip(s) worth a human's attention",
+            "passed": true,
+            "threshold": "<= 15 flips worth review (else too large to hand-review before approval)"
+          },
+          {
+            "name": "Complexity",
+            "detail": "tree depth 4, 15 nodes, 3 feature(s)",
+            "passed": true,
+            "threshold": "depth <= 8 (an approver must be able to read the rule)"
+          },
+          {
+            "name": "Minimum evasion distance",
+            "detail": "no evasion found within the searched realistic range - fully robust to this search",
+            "passed": true,
+            "threshold": ">= 0.15 normalized units (or no evasion found at all)"
+          },
+          {
+            "name": "Economic value",
+            "detail": "Rs 1,462,202 vs currently-hardened policy's Rs 1,463,002",
+            "passed": false,
+            "threshold": "candidate's real Rs net value >= currently-hardened policy's"
+          }
+        ],
+        "breakdown": {
+          "regression": 99.0,
+          "adversarial": 99.9,
+          "fairness": 0,
+          "blast_radius": 100,
+          "complexity": 100,
+          "dr_confidence": 94.7
+        },
+        "weights": {
+          "regression": 0.3,
+          "adversarial": 0.25,
+          "fairness": 0.2,
+          "blast_radius": 0.1,
+          "complexity": 0.05,
+          "dr_confidence": 0.1
+        },
+        "overall_score": 79.1,
+        "status": "BLOCKED",
+        "blocked_reasons": [
+          "Fairness failed: 3 segment(s) flagged, severe=True (needs no segment with both >5x ratio AND >2% absolute FP rate)",
+          "Economic value failed: Rs 1,462,202 vs currently-hardened policy's Rs 1,463,002 (needs candidate's real Rs net value >= currently-hardened policy's)"
+        ]
+      },
+      "rule_text": "|--- max_amount <= 7964.10\n|   |--- class: 0\n|--- max_amount >  7964.10\n|   |--- amount_velocity <= 25832.22\n|   |   |--- max_amount <= 10113.85\n|   |   |   |--- max_amount <= 9126.49\n|   |   |   |   |--- class: 1\n|   |   |   |--- max_amount >  9126.49\n|   |   |   |   |--- class: 1\n|   |   |--- max_amount >  10113.85\n|   |   |   |--- class: 1\n|   |--- amount_velocity >  25832.22\n|   |   |--- ring_density <= 0.50\n|   |   |   |--- max_amount <= 49732.39\n|   |   |   |   |--- class: 0\n|   |   |   |--- max_amount >  49732.39\n|   |   |   |   |--- class: 1\n|   |   |--- ring_density >  0.50\n|   |   |   |--- max_amount <= 53788.21\n|   |   |   |   |--- class: 1\n|   |   |   |--- max_amount >  53788.21\n|   |   |   |   |--- class: 1\n",
       "failed": false
     },
     {
@@ -593,18 +591,16 @@
         "features": [
           "device_sharing",
           "address_sharing",
-          "dual_sharing_signal",
-          "ring_density"
+          "dual_sharing_signal"
         ],
-        "rationale": "Leverages strong sharing and ring density signals identified in feature importances",
-        "hypothesis_statement": "The policy relies too much on amount thresholds and ignores sharing cues; incorporating device_sharing, address_sharing, dual_sharing_signal, and ring_density will capture coordinated ring behavior missed by the existing rule.",
+        "rationale": "Emphasizes multi\u2011entity sharing signals that are highly important.",
+        "hypothesis_statement": "The existing policy overrelies on transaction amounts and misses coordinated abuse across shared devices and addresses; incorporating device_sharing, address_sharing, and dual_sharing_signal will improve detection of shared\u2011entity attacks.",
         "llm_generated": true
       },
       "x_cols": [
         "device_sharing",
         "address_sharing",
-        "dual_sharing_signal",
-        "ring_density"
+        "dual_sharing_signal"
       ],
       "harden_generations": 10,
       "harden_converged": false,
@@ -639,14 +635,14 @@
           "dr_dm_agreement_pct": 39.66298016395211
         },
         "evasion_distance": {
-          "minimum_distance": 0.8305,
+          "minimum_distance": 0.7178,
           "dimensions": [
             "device_sharing",
             "address_sharing"
           ],
           "perturbed_point": {
-            "device_sharing": 0.2727272727272727,
-            "address_sharing": 0.20454545454545453
+            "device_sharing": 0.47727272727272724,
+            "address_sharing": 0.47727272727272724
           },
           "original_point": {
             "n_purchases_before_max": 2,
@@ -669,8 +665,8 @@
         },
         "complexity": {
           "depth": 5,
-          "n_nodes": 13,
-          "n_features": 4
+          "n_nodes": 17,
+          "n_features": 3
         }
       },
       "readiness": {
@@ -707,13 +703,13 @@
           },
           {
             "name": "Complexity",
-            "detail": "tree depth 5, 13 nodes, 4 feature(s)",
+            "detail": "tree depth 5, 17 nodes, 3 feature(s)",
             "passed": true,
             "threshold": "depth <= 8 (an approver must be able to read the rule)"
           },
           {
             "name": "Minimum evasion distance",
-            "detail": "0.831 normalized units via ['device_sharing', 'address_sharing']",
+            "detail": "0.718 normalized units via ['device_sharing', 'address_sharing']",
             "passed": true,
             "threshold": ">= 0.15 normalized units (or no evasion found at all)"
           },
@@ -749,15 +745,15 @@
           "Economic value failed: Rs 1,444,602 vs currently-hardened policy's Rs 1,463,002 (needs candidate's real Rs net value >= currently-hardened policy's)"
         ]
       },
-      "rule_text": "|--- ring_density <= 0.50\n|   |--- class: 0\n|--- ring_density >  0.50\n|   |--- dual_sharing_signal <= 0.50\n|   |   |--- class: 1\n|   |--- dual_sharing_signal >  0.50\n|   |   |--- address_sharing <= 2.50\n|   |   |   |--- ring_density <= 3.50\n|   |   |   |   |--- ring_density <= 2.50\n|   |   |   |   |   |--- class: 1\n|   |   |   |   |--- ring_density >  2.50\n|   |   |   |   |   |--- class: 1\n|   |   |   |--- ring_density >  3.50\n|   |   |   |   |--- class: 1\n|   |   |--- address_sharing >  2.50\n|   |   |   |--- ring_density <= 5.50\n|   |   |   |   |--- class: 1\n|   |   |   |--- ring_density >  5.50\n|   |   |   |   |--- class: 1\n",
+      "rule_text": "|--- device_sharing <= 0.50\n|   |--- address_sharing <= 0.50\n|   |   |--- class: 0\n|   |--- address_sharing >  0.50\n|   |   |--- class: 1\n|--- device_sharing >  0.50\n|   |--- dual_sharing_signal <= 0.50\n|   |   |--- class: 1\n|   |--- dual_sharing_signal >  0.50\n|   |   |--- device_sharing <= 2.50\n|   |   |   |--- address_sharing <= 1.50\n|   |   |   |   |--- device_sharing <= 1.50\n|   |   |   |   |   |--- class: 1\n|   |   |   |   |--- device_sharing >  1.50\n|   |   |   |   |   |--- class: 1\n|   |   |   |--- address_sharing >  1.50\n|   |   |   |   |--- device_sharing <= 1.50\n|   |   |   |   |   |--- class: 1\n|   |   |   |   |--- device_sharing >  1.50\n|   |   |   |   |   |--- class: 1\n|   |   |--- device_sharing >  2.50\n|   |   |   |--- address_sharing <= 2.50\n|   |   |   |   |--- class: 1\n|   |   |   |--- address_sharing >  2.50\n|   |   |   |   |--- class: 1\n",
       "failed": false
     }
   ],
   "recommended_index": 0,
   "registered_version": {
-    "version": 10,
-    "label": "v10 (autonomous: AmountVelocityHybrid)",
-    "created_at": "2026-09-03T15:28:22.328555+00:00",
+    "version": 4,
+    "label": "v4 (autonomous: full feature set (baseline))",
+    "created_at": "2026-09-04T16:31:42.379794+00:00",
     "hyperparams": {
       "max_depth": 6,
       "min_samples_leaf": 6
@@ -768,10 +764,10 @@
     "fp_cost": 0.0,
     "loss_prevented": 1463001.7295545326,
     "total_test_loss": 1463001.7295545328,
-    "rule_text": "|--- max_amount <= 7964.10\n|   |--- class: 0\n|--- max_amount >  7964.10\n|   |--- escalation_ratio <= 1.97\n|   |   |--- class: 0\n|   |--- escalation_ratio >  1.97\n|   |   |--- ring_density <= 1.50\n|   |   |   |--- max_amount <= 17023.56\n|   |   |   |   |--- class: 1\n|   |   |   |--- max_amount >  17023.56\n|   |   |   |   |--- class: 1\n|   |   |--- ring_density >  1.50\n|   |   |   |--- class: 1\n",
+    "rule_text": "|--- max_amount <= 7964.10\n|   |--- class: 0\n|--- max_amount >  7964.10\n|   |--- time_to_escalation <= 0.50\n|   |   |--- class: 0\n|   |--- time_to_escalation >  0.50\n|   |   |--- ring_density <= 0.50\n|   |   |   |--- class: 1\n|   |   |--- ring_density >  0.50\n|   |   |   |--- class: 1\n",
     "approved_by": null,
     "approved_at": null,
-    "note": "Generated by the autonomous risk policy engineer. Autopsy root cause: The deployed rule only triggers when max_amount > 7,964 and time_to_escalation > 7 days. The attacker search never sampled time_to_escalation below 10 days, so the model never saw fast\u2011strike behavior, causing recall to collapse as real rings move to shorter escalation times. The drift monitor confirms this gap.. Readiness 89.7/100.",
+    "note": "Generated by the autonomous risk policy engineer. Autopsy root cause: AI-narrated root cause unavailable right now (the Groq call failed) - feature discovery and policy verification below used no LLM call and are unaffected.. Readiness 89.2/100.",
     "gates": [
       {
         "name": "Historical regression",
@@ -793,7 +789,7 @@
       },
       {
         "name": "Off-policy confidence",
-        "detail": "DR/DM agreement 96.7%",
+        "detail": "DR/DM agreement 91.5%",
         "passed": true,
         "threshold": "DR/DM agreement >= 80%"
       },
@@ -805,7 +801,7 @@
       },
       {
         "name": "Complexity",
-        "detail": "tree depth 4, 9 nodes, 4 feature(s)",
+        "detail": "tree depth 3, 7 nodes, 11 feature(s)",
         "passed": true,
         "threshold": "depth <= 8 (an approver must be able to read the rule)"
       },
@@ -832,51 +828,51 @@
       "status": "ok"
     },
     {
-      "t": 1.52,
+      "t": 0.42,
       "step": "feature_discovery_complete",
       "detail": "4 of 5 candidate features accepted",
       "status": "ok"
     },
     {
-      "t": 3.64,
+      "t": 0.82,
       "step": "autopsy_complete",
-      "detail": "recall drift from untested fast\u2011strike rings",
+      "detail": "unavailable",
       "status": "ok"
     },
     {
-      "t": 5.42,
+      "t": 2.11,
       "step": "hypotheses_generated",
       "detail": "4 candidate policies proposed",
       "status": "ok"
     },
     {
-      "t": 6.98,
+      "t": 2.55,
       "step": "candidate_verified",
       "detail": "full feature set (baseline): APPROVAL_ELIGIBLE (89.2/100)",
       "status": "pass"
     },
     {
-      "t": 8.22,
+      "t": 2.87,
       "step": "candidate_verified",
       "detail": "SpeedFocus: BLOCKED (80.8/100)",
       "status": "blocked"
     },
     {
-      "t": 9.32,
+      "t": 3.12,
       "step": "candidate_verified",
       "detail": "SharingRing: BLOCKED (76.9/100)",
       "status": "blocked"
     },
     {
-      "t": 10.53,
+      "t": 3.41,
       "step": "candidate_verified",
-      "detail": "AmountVelocityHybrid: APPROVAL_ELIGIBLE (89.7/100)",
-      "status": "pass"
+      "detail": "AmountVelocityCombo: BLOCKED (79.1/100)",
+      "status": "blocked"
     },
     {
-      "t": 10.66,
+      "t": 3.43,
       "step": "registered",
-      "detail": "v10 (autonomous: AmountVelocityHybrid)",
+      "detail": "v4 (autonomous: full feature set (baseline))",
       "status": "pass"
     }
   ]

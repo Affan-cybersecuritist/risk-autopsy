@@ -222,8 +222,13 @@ No text outside the JSON."""
         # Fail closed with a clearly-labeled fallback, not a fabricated
         # analysis - the orchestrator can still proceed on feature
         # importances alone, it just won't have an LLM-authored narrative.
+        # Keep this message short and human-readable, not a raw exception
+        # dump (a Groq rate-limit error is a multi-line nested dict as a
+        # string) - it gets shown directly in the UI and embedded verbatim
+        # into the registered policy's note field below.
         return {
-            "failure_type": "unavailable", "root_cause": f"Autopsy agent unavailable: {e}",
+            "failure_type": "unavailable",
+            "root_cause": f"AI-narrated root cause unavailable right now - {llm_mod.describe_error(e)}. Feature discovery and policy verification below used no LLM call and are unaffected.",
             "missed_signals": [], "existing_control_failure": "unavailable",
             "candidate_features": [], "confidence": 0.0, "llm_available": False,
         }
