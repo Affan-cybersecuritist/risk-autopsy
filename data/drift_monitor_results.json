@@ -1,0 +1,152 @@
+{
+  "months": [
+    {
+      "month": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        17.0,
+        24.0
+      ]
+    },
+    {
+      "month": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 391525.49238929036,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        15.6,
+        22.4
+      ]
+    },
+    {
+      "month": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 402584.58045236906,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        14.3,
+        20.7
+      ]
+    },
+    {
+      "month": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 418061.37888811494,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        12.9,
+        19.1
+      ]
+    },
+    {
+      "month": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 428760.59475255763,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        11.5,
+        17.5
+      ]
+    },
+    {
+      "month": 6,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 417310.7752082887,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        10.2,
+        15.8
+      ]
+    },
+    {
+      "month": 7,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 415616.7796663162,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        8.8,
+        14.2
+      ]
+    },
+    {
+      "month": 8,
+      "precision": 1.0,
+      "recall": 0.85,
+      "fp": 0,
+      "loss_total": 410443.5248381016,
+      "loss_missed": 56747.74364250277,
+      "typical_strike_wait_days": [
+        7.5,
+        12.5
+      ]
+    },
+    {
+      "month": 9,
+      "precision": 1.0,
+      "recall": 0.7,
+      "fp": 0,
+      "loss_total": 325866.39131058403,
+      "loss_missed": 92524.5835747124,
+      "typical_strike_wait_days": [
+        6.1,
+        10.9
+      ]
+    },
+    {
+      "month": 10,
+      "precision": 0.8333333333333334,
+      "recall": 0.25,
+      "fp": 1,
+      "loss_total": 391819.93061117496,
+      "loss_missed": 329352.6076318545,
+      "typical_strike_wait_days": [
+        4.7,
+        9.3
+      ]
+    },
+    {
+      "month": 11,
+      "precision": 0.0,
+      "recall": 0.0,
+      "fp": 0,
+      "loss_total": 414913.6133011888,
+      "loss_missed": 414913.6133011888,
+      "typical_strike_wait_days": [
+        3.4,
+        7.6
+      ]
+    },
+    {
+      "month": 12,
+      "precision": 0.0,
+      "recall": 0.0,
+      "fp": 0,
+      "loss_total": 376416.71934788197,
+      "loss_missed": 376416.719347882,
+      "typical_strike_wait_days": [
+        2.0,
+        6.0
+      ]
+    }
+  ],
+  "alert_recall_floor": 0.5,
+  "alert_month": 10,
+  "root_cause": "The deployed policy's real decision rule is 'max_amount > Rs 7,964 AND time_to_escalation > 7 days'. src/coevolution.py's own attacker search sampled time_to_escalation only from 10-30 days, never below 10 - so the zero-evasions-found, fully-converged certificate never actually tested a fast-strike ring. This monitor simulates rings gradually adapting toward a faster strike time and shows recall collapsing once real-world behavior moves outside the envelope that was actually tested.",
+  "recommended_action": "Widen coevolution.py's attacker time_to_escalation sampling range to include values below 10 (ideally down to 1) and rerun the arms race - this monitor's finding is the evidence that range was too narrow. Not done automatically here so the existing, honestly-earned convergence result for the tested envelope is not silently overwritten."
+}

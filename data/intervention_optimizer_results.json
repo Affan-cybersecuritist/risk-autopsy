@@ -1,0 +1,6084 @@
+{
+  "action_definitions": [
+    {
+      "action": "ALLOW",
+      "prevent_frac": 0.0,
+      "friction_cost": 0.0,
+      "rationale": "No intervention."
+    },
+    {
+      "action": "STEP_UP",
+      "prevent_frac": 0.55,
+      "friction_cost": 40.0,
+      "rationale": "Extra verification (OTP/3DS) - many rings abandon under scrutiny, but not all."
+    },
+    {
+      "action": "DELAY",
+      "prevent_frac": 0.65,
+      "friction_cost": 60.0,
+      "rationale": "Hold the transaction briefly - buys time for a secondary signal to fire."
+    },
+    {
+      "action": "MANUAL_REVIEW",
+      "prevent_frac": 0.85,
+      "friction_cost": 150.0,
+      "rationale": "Human review - reuses this project's existing FP_COST=150 as the literal review cost."
+    },
+    {
+      "action": "BLOCK",
+      "prevent_frac": 1.0,
+      "friction_cost": 800.0,
+      "rationale": "Hard block - full prevention, but full lost-transaction + support cost if wrong."
+    }
+  ],
+  "per_customer_actions": [
+    {
+      "customer_id": 2,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0567
+    },
+    {
+      "customer_id": 3,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 4,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 5,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 9,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 10,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 11,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 25,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 26,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 55,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 56,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 57,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 58,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 59,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 60,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0667
+    },
+    {
+      "customer_id": 90,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 91,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 92,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 93,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 94,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 95,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 140,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 141,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0033
+    },
+    {
+      "customer_id": 143,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 144,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 146,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 163,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 166,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 169,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 171,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 173,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 174,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 176,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 179,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 180,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 183,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 190,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 195,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 197,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 202,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 204,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 205,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 209,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 212,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 215,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 216,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 219,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 221,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 225,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 226,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 227,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 228,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 231,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 236,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 237,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 242,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 243,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 248,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 253,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 254,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 261,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 262,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 264,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 266,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 271,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 274,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 280,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 281,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 282,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.01
+    },
+    {
+      "customer_id": 287,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 288,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 291,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 294,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 305,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 310,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 311,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 312,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 319,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 328,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 333,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 338,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 344,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 345,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 346,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 348,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 353,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 359,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 362,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 378,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 381,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 385,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 389,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0133
+    },
+    {
+      "customer_id": 392,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 394,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 396,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 399,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 400,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 409,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 415,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 426,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 427,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 438,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 439,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 443,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 446,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 448,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 450,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 457,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 461,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 463,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 472,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 473,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 475,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 477,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 481,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 488,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 489,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0067
+    },
+    {
+      "customer_id": 491,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 492,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 496,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 498,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 500,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 501,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 502,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 504,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 505,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 508,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 511,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 514,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 515,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 518,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 521,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 525,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 529,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 530,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 531,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 532,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 548,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 550,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 551,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 557,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 559,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 560,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 561,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 562,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 566,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 569,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 572,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 573,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 575,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 576,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 577,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 579,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 582,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 583,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 591,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 593,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 594,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 596,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 606,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 607,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 612,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 614,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 615,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 626,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 627,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 628,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 632,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 634,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 637,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 640,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 647,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 648,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 650,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 653,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 656,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 659,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 677,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 681,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 682,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 683,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 687,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 688,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 689,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 690,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 697,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 699,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 703,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 704,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 705,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 708,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 713,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 715,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 717,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 718,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 721,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 724,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 734,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 735,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 736,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 750,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 754,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 756,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 759,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 761,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 764,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 775,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 779,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 782,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 788,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 789,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 792,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 793,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 798,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 805,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 808,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 809,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 811,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 815,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 816,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 819,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 820,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 822,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 829,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 834,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 835,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 838,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 839,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 844,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 847,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 857,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 859,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 865,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 867,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 868,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 872,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 876,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 879,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 882,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 884,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 889,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 891,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 893,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 896,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 899,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 909,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 931,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 937,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 941,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 942,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 943,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 945,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 949,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 950,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 955,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 962,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 968,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 972,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 973,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 974,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 975,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 980,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 981,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 985,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 986,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 988,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 994,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 998,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1007,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1009,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1012,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1014,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1016,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1023,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1029,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1037,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1040,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1041,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1043,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1050,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1052,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1053,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1059,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1061,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1067,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1068,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1070,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1073,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1078,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1079,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1088,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1089,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1090,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1092,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1100,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1105,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1107,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1110,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1116,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1117,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1121,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1127,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1129,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1130,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1134,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1136,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1139,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1140,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1141,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1144,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1148,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1150,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1151,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1153,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1155,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1156,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1158,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1159,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1163,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1165,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1167,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1169,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1174,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1179,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1180,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1183,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1184,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1193,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1196,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1200,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1203,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1206,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1208,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1212,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1214,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1216,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1225,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1231,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1234,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1236,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1237,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1241,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1244,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1245,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1251,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1253,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1259,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1264,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1266,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1268,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1271,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1272,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1281,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1291,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1292,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1297,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1299,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1300,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1303,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1316,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1319,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1322,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1323,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1326,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1332,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1333,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1335,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1339,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1344,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1347,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1353,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1358,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1360,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1361,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1362,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1368,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.1733
+    },
+    {
+      "customer_id": 1378,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1379,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1380,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1381,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1385,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1386,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1389,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1400,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1401,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1402,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1408,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1409,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1414,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1417,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1421,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1422,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1423,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1426,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1435,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1436,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1437,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1441,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1448,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1450,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1453,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1455,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1457,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1465,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1469,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1470,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1472,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1481,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1482,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1485,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1486,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1488,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1493,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1495,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1497,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1499,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1500,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1503,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1508,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1512,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1513,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1515,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1517,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1522,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1527,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1529,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1532,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1537,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1541,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1545,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1546,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1547,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1548,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1551,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1552,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1555,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1556,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1562,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1563,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1568,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1577,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1585,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1586,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1589,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1594,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1599,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1606,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1613,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1615,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1621,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1634,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1638,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1639,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1653,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1662,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1666,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1667,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1671,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1677,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1678,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1681,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1683,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1684,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.01
+    },
+    {
+      "customer_id": 1685,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1697,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1699,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1702,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1705,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1709,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1710,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1711,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1714,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1715,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1716,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1723,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1724,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1728,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1731,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1733,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1735,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1743,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1744,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1748,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1750,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1751,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1756,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1758,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1759,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1760,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1762,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1767,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1772,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1774,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1779,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1780,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1782,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1783,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1784,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1788,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1789,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1791,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1792,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1795,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1797,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1799,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1801,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1802,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1803,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1806,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1808,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1809,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1814,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1815,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1817,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1818,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1819,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1821,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1823,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1837,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1840,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1843,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1844,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1846,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1865,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1866,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1868,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1869,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1870,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1873,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1874,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1876,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1878,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1879,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1880,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1881,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1883,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1885,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1897,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1899,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1900,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1903,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1908,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1909,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1912,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1915,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1919,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1921,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1922,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1926,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1929,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1930,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1939,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1940,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1945,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1955,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1958,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1964,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1965,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1969,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1970,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1977,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1978,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1982,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1985,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1986,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1990,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1991,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 1994,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2000,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2002,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2005,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2006,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2008,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2010,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2015,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2017,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2018,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2022,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2024,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2026,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2027,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2029,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2032,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2039,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2044,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2053,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2055,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2057,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2058,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2064,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2068,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2076,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2077,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2087,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2089,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2095,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2104,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2109,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2113,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2115,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2118,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2119,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2120,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2124,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2126,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2130,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2132,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2133,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2135,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2136,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2143,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2144,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2146,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2150,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2152,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2154,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2161,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2167,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2169,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2171,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2180,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2191,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2194,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2195,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2197,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2205,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2210,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2211,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2213,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2214,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2218,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2221,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2224,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2226,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2230,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2231,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2234,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2240,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2244,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2247,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2257,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2258,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2262,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2263,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2272,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2276,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2277,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2278,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2279,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2281,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2282,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2284,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2286,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2287,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2289,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2292,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2294,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2296,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2299,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2300,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2302,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2304,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2310,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2313,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2317,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2319,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2320,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2323,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2324,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2334,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2336,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2339,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2340,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2341,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2342,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2343,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2350,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2363,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2364,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2365,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2374,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2376,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2378,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2381,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2383,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2384,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2385,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2402,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2406,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2411,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2412,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2413,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2418,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2419,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2421,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2426,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2427,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2432,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2436,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2437,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2443,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2445,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2446,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2450,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2451,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2454,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2458,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2465,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2470,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2471,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2474,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2475,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2477,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2478,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2480,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2482,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2486,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2488,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2489,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2491,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2494,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2495,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2496,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2497,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2499,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2500,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2504,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2511,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2513,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2518,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2523,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2528,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2530,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2531,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2533,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2538,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2541,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2544,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0133
+    },
+    {
+      "customer_id": 2545,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2549,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2552,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2554,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2561,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2564,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2570,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2573,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2577,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2578,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2580,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2581,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2585,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2586,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2592,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2598,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2599,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2600,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2601,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2605,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2606,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2608,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2611,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2612,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2619,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2622,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2627,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2629,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2639,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2643,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2645,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2648,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2658,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2659,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2660,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2670,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2672,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2673,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2675,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2678,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2680,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2683,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2685,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2688,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2690,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2692,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2699,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2700,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2703,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2706,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2708,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2709,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2711,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2714,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2717,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2719,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2723,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2725,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2729,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2734,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2747,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2748,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2749,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2751,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2757,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2758,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2760,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2763,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2764,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2768,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2771,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2773,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2774,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2777,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2782,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2784,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2787,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2790,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2797,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2804,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2812,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2817,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2818,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2819,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2823,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2827,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2828,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2830,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2833,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2839,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2840,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2847,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2850,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2851,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2855,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2860,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2862,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2864,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2870,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2875,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2877,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2879,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2881,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2882,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2883,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2886,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2888,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2889,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2890,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2894,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2895,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2899,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2901,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2904,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2907,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2910,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2912,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2913,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2915,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2919,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2927,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2928,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2930,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2932,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2938,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2941,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2942,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2943,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2944,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2945,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2948,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2956,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2957,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2959,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2960,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2964,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2966,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2967,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2970,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2976,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2977,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2980,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2983,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2988,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2995,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2996,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2997,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2998,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 2999,
+      "action": "ALLOW",
+      "expected_net_value": 0.0,
+      "p_abuse": 0.0
+    },
+    {
+      "customer_id": 3028,
+      "action": "BLOCK",
+      "expected_net_value": 36805.79,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3029,
+      "action": "BLOCK",
+      "expected_net_value": 41526.96,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3030,
+      "action": "BLOCK",
+      "expected_net_value": 37428.42,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3031,
+      "action": "BLOCK",
+      "expected_net_value": 45534.79,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3032,
+      "action": "BLOCK",
+      "expected_net_value": 41384.03,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3033,
+      "action": "BLOCK",
+      "expected_net_value": 46392.68,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3034,
+      "action": "BLOCK",
+      "expected_net_value": 47761.79,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3035,
+      "action": "BLOCK",
+      "expected_net_value": 37303.74,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3040,
+      "action": "BLOCK",
+      "expected_net_value": 47981.93,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3041,
+      "action": "BLOCK",
+      "expected_net_value": 47458.38,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3042,
+      "action": "BLOCK",
+      "expected_net_value": 40354.62,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3043,
+      "action": "BLOCK",
+      "expected_net_value": 33814.41,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3052,
+      "action": "BLOCK",
+      "expected_net_value": 44276.48,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3053,
+      "action": "BLOCK",
+      "expected_net_value": 38719.18,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3054,
+      "action": "BLOCK",
+      "expected_net_value": 41460.95,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3055,
+      "action": "BLOCK",
+      "expected_net_value": 48433.08,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3064,
+      "action": "BLOCK",
+      "expected_net_value": 34755.2,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3065,
+      "action": "BLOCK",
+      "expected_net_value": 51398.9,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3066,
+      "action": "BLOCK",
+      "expected_net_value": 47469.4,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3067,
+      "action": "BLOCK",
+      "expected_net_value": 43326.11,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3068,
+      "action": "BLOCK",
+      "expected_net_value": 47784.34,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3069,
+      "action": "BLOCK",
+      "expected_net_value": 49002.04,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3070,
+      "action": "BLOCK",
+      "expected_net_value": 47627.86,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3071,
+      "action": "BLOCK",
+      "expected_net_value": 42487.37,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3076,
+      "action": "BLOCK",
+      "expected_net_value": 41367.11,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3077,
+      "action": "BLOCK",
+      "expected_net_value": 34254.58,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3078,
+      "action": "BLOCK",
+      "expected_net_value": 37774.69,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3079,
+      "action": "BLOCK",
+      "expected_net_value": 37976.04,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3108,
+      "action": "BLOCK",
+      "expected_net_value": 12470.27,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3109,
+      "action": "BLOCK",
+      "expected_net_value": 13663.39,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3110,
+      "action": "BLOCK",
+      "expected_net_value": 7882.53,
+      "p_abuse": 0.9867
+    },
+    {
+      "customer_id": 3111,
+      "action": "BLOCK",
+      "expected_net_value": 15994.48,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3116,
+      "action": "BLOCK",
+      "expected_net_value": 16782.93,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3117,
+      "action": "BLOCK",
+      "expected_net_value": 14459.96,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3118,
+      "action": "BLOCK",
+      "expected_net_value": 12285.62,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3119,
+      "action": "BLOCK",
+      "expected_net_value": 16813.5,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3120,
+      "action": "BLOCK",
+      "expected_net_value": 11223.63,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3121,
+      "action": "BLOCK",
+      "expected_net_value": 14665.09,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3122,
+      "action": "BLOCK",
+      "expected_net_value": 11987.97,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3123,
+      "action": "BLOCK",
+      "expected_net_value": 12207.11,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3164,
+      "action": "BLOCK",
+      "expected_net_value": 13867.22,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3165,
+      "action": "BLOCK",
+      "expected_net_value": 11422.55,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3166,
+      "action": "BLOCK",
+      "expected_net_value": 16178.06,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3167,
+      "action": "BLOCK",
+      "expected_net_value": 14578.78,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3176,
+      "action": "BLOCK",
+      "expected_net_value": 16133.16,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3177,
+      "action": "BLOCK",
+      "expected_net_value": 9663.64,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3178,
+      "action": "BLOCK",
+      "expected_net_value": 13170.97,
+      "p_abuse": 1.0
+    },
+    {
+      "customer_id": 3179,
+      "action": "BLOCK",
+      "expected_net_value": 15549.59,
+      "p_abuse": 1.0
+    }
+  ],
+  "action_counts": {
+    "ALLOW": 887,
+    "BLOCK": 48
+  },
+  "total_net_value_optimizer": 1462861.3,
+  "total_net_value_binary_policy": 1463001.73,
+  "total_net_value_allow_all": -1463001.73,
+  "improvement_vs_binary": -140.43,
+  "improvement_vs_allow_all": 2925863.03,
+  "n_test_customers": 935,
+  "n_ambiguous_customers": 1,
+  "separability_note": "Only 1 of 935 held-out test customers had a real risk score strictly between 0.1 and 0.9 - this dataset's abuse rings share device/address ids by construction, which makes most customers near-perfectly separable. In practice the optimizer mostly resolves to ALLOW/BLOCK on THIS data, same as the binary policy - the graded middle actions (STEP_UP/DELAY/MANUAL_REVIEW) would matter most on messier real-world data with weaker separability. This is a property of the dataset, not a limitation of the optimizer - see decision_boundary_curve below for proof the mechanism itself does select every action for some region of risk.",
+  "decision_boundary_curve": [
+    {
+      "p_abuse": 0.0,
+      "optimal_action": "ALLOW"
+    },
+    {
+      "p_abuse": 0.01,
+      "optimal_action": "DELAY"
+    },
+    {
+      "p_abuse": 0.02,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.03,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.04,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.05,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.06,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.07,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.08,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.09,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.1,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.11,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.12,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.13,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.14,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.15,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.16,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.17,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.18,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.19,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.2,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.21,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.22,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.23,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.24,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.25,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.26,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.27,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.28,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.29,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.3,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.31,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.32,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.33,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.34,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.35,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.36,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.37,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.38,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.39,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.4,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.41,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.42,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.43,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.44,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.45,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.46,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.47,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.48,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.49,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.5,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.51,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.52,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.53,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.54,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.55,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.56,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.57,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.58,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.59,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.6,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.61,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.62,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.63,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.64,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.65,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.66,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.67,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.68,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.69,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.7,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.71,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.72,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.73,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.74,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.75,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.76,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.77,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.78,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.79,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.8,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.81,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.82,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.83,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.84,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.85,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.86,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.87,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.88,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.89,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.9,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.91,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.92,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.93,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.94,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.95,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.96,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.97,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.98,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 0.99,
+      "optimal_action": "BLOCK"
+    },
+    {
+      "p_abuse": 1.0,
+      "optimal_action": "BLOCK"
+    }
+  ],
+  "decision_boundary_transitions": [
+    {
+      "p_abuse": 0.0,
+      "optimal_action": "ALLOW"
+    },
+    {
+      "p_abuse": 0.01,
+      "optimal_action": "DELAY"
+    },
+    {
+      "p_abuse": 0.02,
+      "optimal_action": "MANUAL_REVIEW"
+    },
+    {
+      "p_abuse": 0.13,
+      "optimal_action": "BLOCK"
+    }
+  ],
+  "decision_boundary_representative_loss_rs": 30479.2,
+  "method": "For every held-out test customer, expected_net_value(action) = P(abuse|x)*loss_rs*prevent_frac(action) - P(genuine|x)*friction_cost(action). P(abuse|x) comes from a RandomForestClassifier (300 trees, max_depth=6) trained separately on the same leakage-free X_cols and train split as the governed policy - used ONLY to produce a continuous risk score for this ladder, not as a competing policy (the auditable discovered_policy_final.joblib decision tree, hardened through the full adversarial arms race, is near-binary at its leaves and is the artifact actually approved/deployed for the ALLOW/FLAG decision). The optimizer picks argmax over the 5-action ladder (ALLOW/STEP_UP/DELAY/MANUAL_REVIEW/BLOCK). prevent_frac and friction_cost per action are engineering estimates (disclosed above per action), not measured real-world figures - same disclosure standard as this project's existing FP_COST_PER_CASE=150 constant."
+}

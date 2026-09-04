@@ -1,0 +1,13 @@
+backend/.env
+.env
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+webapp/node_modules/
+webapp/dist/
+data/tenants/
+_legacy_superseded/
+.git/
+.github/
+.claude/

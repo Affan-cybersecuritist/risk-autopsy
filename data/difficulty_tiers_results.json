@@ -1,0 +1,45 @@
+{
+  "tiers": [
+    {
+      "tier": "easy",
+      "n_customers": 3180,
+      "n_abuse": 180,
+      "precision": 0.9945,
+      "recall": 1.0,
+      "false_positives": 1,
+      "fp_rate": 0.0003,
+      "net_value_rs": 4828162.59
+    },
+    {
+      "tier": "ambiguous",
+      "n_customers": 3330,
+      "n_abuse": 180,
+      "precision": 0.7469,
+      "recall": 1.0,
+      "false_positives": 61,
+      "fp_rate": 0.0194,
+      "net_value_rs": 4780162.59
+    },
+    {
+      "tier": "adversarial",
+      "n_customers": 3410,
+      "n_abuse": 260,
+      "precision": 0.8076,
+      "recall": 0.9846,
+      "false_positives": 61,
+      "fp_rate": 0.0194,
+      "net_value_rs": 5622539.48
+    }
+  ],
+  "drifted": {
+    "tier": "drifted",
+    "note": "not a new generation - reuses drift_monitor.py's real simulation",
+    "recall_at_month_1": 1.0,
+    "recall_at_final_month_pre_remediation": 0.0,
+    "alert_month": 10,
+    "recall_at_final_month_post_remediation": 1.0
+  },
+  "policy_evaluated": "discovered_policy_final.joblib (frozen, never retrained on any tier below)",
+  "method": "The already-hardened, already-frozen discovered_policy_final.joblib is scored (never retrained) against three FRESH populations generated with seed=777 (distinct from the training seed 42, so even 'easy' here is out-of-sample) that are harder BY CONSTRUCTION (see src/dataset_tiers.py): 'easy' is the original population's generative distribution; 'ambiguous' adds genuine customers who look ring-like without being rings (shared corporate device, genuine gift escalation, genuine high-frequency buyers); 'adversarial' adds the same abuse-ring mechanics deliberately camouflaged (escalation spread across 2 purchases, wide strike-timing window, partial device sharing). This is a generalization/out-of-distribution test of one frozen policy, not a fresh-retrain-per-tier comparison - retraining per tier was tried first and found to be the wrong experiment (see this file's module docstring). 'drifted' reuses this project's own real drift-monitor simulation, not a new generation.",
+  "net_value_caveat": "net_value_rs is NOT comparable across tiers - each tier has a different population size and total loss at stake by construction (ambiguous/adversarial add more customers). Compare precision/recall/fp_rate across tiers; net_value_rs is only meaningful within one tier."
+}

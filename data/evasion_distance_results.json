@@ -1,0 +1,46 @@
+{
+  "pre_remediation": {
+    "minimum_distance": 0.4497,
+    "dimensions": [
+      "time_to_escalation"
+    ],
+    "perturbed_point": {
+      "time_to_escalation": 6.959899749373434
+    },
+    "original_point": {
+      "n_purchases_before_max": 2,
+      "low_amount": 1500,
+      "mid_amount": 20000,
+      "time_to_escalation": 20,
+      "device_sharing": 2,
+      "address_sharing": 2
+    },
+    "per_dimension_single_axis_distance": {
+      "mid_amount": null,
+      "device_sharing": null,
+      "address_sharing": null,
+      "time_to_escalation": 0.4497
+    }
+  },
+  "post_remediation": {
+    "minimum_distance": null,
+    "dimensions": null,
+    "perturbed_point": null,
+    "original_point": {
+      "n_purchases_before_max": 2,
+      "low_amount": 1500,
+      "mid_amount": 20000,
+      "time_to_escalation": 20,
+      "device_sharing": 2,
+      "address_sharing": 2
+    },
+    "per_dimension_single_axis_distance": {
+      "mid_amount": null,
+      "device_sharing": null,
+      "address_sharing": null,
+      "time_to_escalation": null
+    },
+    "note": "No single- or paired-dimension perturbation within the searched realistic range evaded this policy - this pattern is robustly caught."
+  },
+  "method": "Starting from attack_coverage.py's BASE_PATTERN (a known-abuse fixed point every dimension sweep already knows this policy currently catches), a fine grid search (400 points per axis, 45x45 per pair) finds the smallest normalized perturbation - single-axis or two-axis combined - that flips the policy's prediction from caught (1) to evaded (0). Distance is normalized per dimension by its realistic sweep range so units (rupees, days, a 0-3 sharing count) are comparable; a 2-axis distance is Euclidean over the two normalized deltas."
+}

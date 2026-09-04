@@ -1,0 +1,21 @@
+{
+  "n_customers": 3180,
+  "logged_flag_rate": 0.08553459119496855,
+  "target_flag_rate": 0.0610062893081761,
+  "V_dm": 1391.7329555306662,
+  "V_ips": 1772.3215238254618,
+  "V_dr": 1462.7405538364847,
+  "V_true_oracle_target": 1495.584528040555,
+  "V_true_oracle_baseline": 1059.412619305022,
+  "dr_error_vs_oracle": 32.843974204070264,
+  "dm_error_vs_oracle": 103.85157250988868,
+  "ips_error_vs_oracle": 276.73699578490687,
+  "dr_error_pct": 2.1960627158333144,
+  "dm_error_pct": 6.943878501200475,
+  "ips_error_pct": 18.503601140316338,
+  "dr_ci_low": 1191.7873983426916,
+  "dr_ci_high": 1713.968849927933,
+  "amount_threshold": 25000.0,
+  "logistic_scale": 4000.0,
+  "fp_cost": 150.0
+}

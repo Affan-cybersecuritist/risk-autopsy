@@ -1,0 +1,13 @@
+fastapi==0.139.2
+uvicorn==0.51.0
+pandas==3.0.3
+numpy==2.4.6
+scikit-learn==1.9.0
+joblib==1.5.3
+groq==1.5.0
+python-dotenv==1.0.1
+python-multipart==0.0.32
+reportlab==5.0.0
+requests==2.34.2
+pypdf==6.16.2
+pytest==8.2.2

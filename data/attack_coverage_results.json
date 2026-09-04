@@ -1,0 +1,24 @@
+{
+  "dimensions": [
+    "Amount manipulation",
+    "Ring density",
+    "Device sharing",
+    "Address sharing",
+    "Strike timing"
+  ],
+  "pre_remediation": {
+    "Amount manipulation": 100.0,
+    "Ring density": 100.0,
+    "Device sharing": 100.0,
+    "Address sharing": 100.0,
+    "Strike timing": 73.0
+  },
+  "post_remediation": {
+    "Amount manipulation": 100.0,
+    "Ring density": 100.0,
+    "Device sharing": 100.0,
+    "Address sharing": 100.0,
+    "Strike timing": 100.0
+  },
+  "method": "For each dimension, 200 synthetic abuse-pattern points sweep that dimension across its realistic range while holding every other dimension at a value already known to look like abuse; coverage = % of the sweep the policy flags. Same realistic-archetype ranges used throughout this project's adversarial testing (src/coevolution.py, src/remediate_drift.py)."
+}

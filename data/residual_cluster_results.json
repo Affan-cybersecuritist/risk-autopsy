@@ -1,0 +1,50 @@
+{
+  "disclaimer": "This is unsupervised clustering of residual (misclassified or borderline) held-out customers from a fixed, known synthetic abuse typology. Any cluster found here is a structural property of this dataset's generator and noise, not evidence of a real, previously-unseen fraud pattern. Treat this as an illustration of the CAPABILITY (what a residual scan would surface on real data), not a discovery claim.",
+  "policy_used": "discovered_policy.joblib (v1, NOT the adversarially-hardened final policy - the hardened policy has 0 residuals on this held-out set, so v1's real 5 false positives are used instead to demonstrate the mechanism against an actual, non-empty residual population)",
+  "k_chosen": 2,
+  "silhouette_score": 0.6066,
+  "pct_loss_explained_by_known_policy": 100.0,
+  "pct_loss_in_residual_clusters": 0.0,
+  "n_residual_customers": 5,
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 4,
+      "mean_loss_rs": 0.0,
+      "abuse_rate": 0.0,
+      "centroid": {
+        "n_purchases_before_max": 1.25,
+        "max_amount": 3214.542,
+        "escalation_ratio": 7.736,
+        "time_to_escalation": 4.0,
+        "account_age_at_escalation": 18.25,
+        "device_sharing": 0.0,
+        "address_sharing": 0.0
+      },
+      "dominant_dimensions": [
+        "escalation_ratio",
+        "max_amount"
+      ]
+    },
+    {
+      "cluster_id": 1,
+      "size": 1,
+      "mean_loss_rs": 0.0,
+      "abuse_rate": 0.0,
+      "centroid": {
+        "n_purchases_before_max": 3.0,
+        "max_amount": 7928.201,
+        "escalation_ratio": 10.934,
+        "time_to_escalation": 43.0,
+        "account_age_at_escalation": 54.0,
+        "device_sharing": 0.0,
+        "address_sharing": 0.0
+      },
+      "dominant_dimensions": [
+        "escalation_ratio",
+        "max_amount"
+      ]
+    }
+  ],
+  "method": "Residual customers = held-out test-set rows where discovered_policy.joblib (v1)'s prediction disagrees with the true label (false positive/negative), or its predict_proba is borderline (0.1-0.9). KMeans (k chosen by silhouette score over k=2..5) clusters these on standardized X_cols. dominant_dimensions = the 2 features with the largest standardized deviation from the residual population's own mean, per cluster - i.e. what makes that cluster distinct from other hard cases, not from the whole dataset."
+}

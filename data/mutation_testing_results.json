@@ -1,0 +1,63 @@
+{
+  "original_precision": 1.0,
+  "original_recall": 1.0,
+  "original_net_value_rs": 1463001.73,
+  "n_mutants_generated": 6,
+  "n_behaviorally_different": 4,
+  "n_caught": 4,
+  "mutation_score_pct": 100.0,
+  "per_mutation_type": {
+    "threshold_plus_10pct": {
+      "total_behaviorally_different": 1,
+      "caught": 1
+    },
+    "threshold_minus_10pct": {
+      "total_behaviorally_different": 1,
+      "caught": 1
+    },
+    "invert": {
+      "total_behaviorally_different": 2,
+      "caught": 2
+    }
+  },
+  "detailed": [
+    {
+      "node_id": 0,
+      "mutation_type": "threshold_plus_10pct",
+      "caught": true,
+      "precision": 1.0,
+      "recall": 0.9792,
+      "net_value_rs": 1455001.73
+    },
+    {
+      "node_id": 0,
+      "mutation_type": "threshold_minus_10pct",
+      "caught": true,
+      "precision": 0.9796,
+      "recall": 1.0,
+      "net_value_rs": 1462201.73
+    },
+    {
+      "node_id": 0,
+      "mutation_type": "invert",
+      "caught": true,
+      "precision": 0.0,
+      "recall": 0.0,
+      "net_value_rs": -444800.0
+    },
+    {
+      "node_id": 2,
+      "mutation_type": "invert",
+      "caught": true,
+      "precision": 0.0,
+      "recall": 0.0,
+      "net_value_rs": -45600.0
+    }
+  ],
+  "gate_thresholds": {
+    "precision_floor": 0.85,
+    "recall_floor": 0.95
+  },
+  "sample_size_caveat": "discovered_policy_final.joblib is a shallow tree (depth 2, 5 nodes, 2 internal node(s)), so only 6 mutants exist and only 4 of them actually change any prediction. A 100% mutation score here means 'every mutation that did anything was caught,' not 'thousands of mutations were tested' - disclosed plainly, not inflated. A deeper/more complex candidate policy would exercise this test more.",
+  "method": "6 structural mutants generated from discovered_policy_final.joblib's already-fitted tree_ structure (threshold +-10%, or an inverted split, per internal node) - no retraining. Mutants producing identical predictions to the original are excluded (nothing to catch). Among the rest, 'caught' means the mutant fails this project's own regression gate (precision >=85%, recall >=95%, same thresholds backend/agent.py uses) or its real Rs net value drops below the original's."
+}

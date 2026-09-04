@@ -1,0 +1,21 @@
+# Render Blueprint - deploys this whole app (backend + frontend, one
+# container, see Dockerfile) as a single free Web Service.
+#
+# To use: push this repo to GitHub, then in Render, "New +" -> "Blueprint",
+# point it at this repo. Render reads this file automatically and sets up
+# the service below. GROQ_API_KEY and SUPABASE_SERVICE_ROLE_KEY are
+# optional (the app degrades gracefully without them, see README) - fill
+# them in under the service's Environment tab after it's created if you
+# want the AI features and human-approval flow to work.
+services:
+  - type: web
+    name: risk-autopsy
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false

@@ -1,0 +1,27 @@
+{
+  "generation_log": [
+    {
+      "generation": 1,
+      "evasions_found": 39,
+      "search_budget": 500,
+      "test_precision": 0.9056603773584906,
+      "test_recall": 1.0,
+      "test_fp": 5
+    },
+    {
+      "generation": 2,
+      "evasions_found": 0,
+      "search_budget": 500,
+      "test_precision": 1.0,
+      "test_recall": 1.0,
+      "test_fp": 0
+    }
+  ],
+  "converged": true,
+  "converged_at_generation": 2,
+  "final_precision": 1.0,
+  "final_recall": 1.0,
+  "final_fp": 0,
+  "final_rule_text": "|--- max_amount <= 7964.10\n|   |--- class: 0\n|--- max_amount >  7964.10\n|   |--- time_to_escalation <= 7.00\n|   |   |--- class: 0\n|   |--- time_to_escalation >  7.00\n|   |   |--- class: 1\n",
+  "search_budget_per_generation": 500
+}

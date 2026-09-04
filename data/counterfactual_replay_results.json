@@ -1,0 +1,69 @@
+{
+  "n_historical_months": 6,
+  "months": [
+    {
+      "month": 1,
+      "n_customers": 240,
+      "logged_flag_rate": 0.041666666666666664,
+      "target_flag_rate": 0.0875,
+      "dr_extra_value_this_month": 274206.738379427,
+      "oracle_extra_value_this_month": 282938.39393953164,
+      "cumulative_dr_extra_value": 274206.738379427,
+      "cumulative_oracle_extra_value": 282938.39393953164
+    },
+    {
+      "month": 2,
+      "n_customers": 240,
+      "logged_flag_rate": 0.0375,
+      "target_flag_rate": 0.0875,
+      "dr_extra_value_this_month": 240963.17927075704,
+      "oracle_extra_value_this_month": 230343.784976078,
+      "cumulative_dr_extra_value": 515169.917650184,
+      "cumulative_oracle_extra_value": 513282.1789156096
+    },
+    {
+      "month": 3,
+      "n_customers": 240,
+      "logged_flag_rate": 0.029166666666666667,
+      "target_flag_rate": 0.08333333333333333,
+      "dr_extra_value_this_month": 304225.4926904651,
+      "oracle_extra_value_this_month": 324401.89943957626,
+      "cumulative_dr_extra_value": 819395.4103406491,
+      "cumulative_oracle_extra_value": 837684.0783551859
+    },
+    {
+      "month": 4,
+      "n_customers": 240,
+      "logged_flag_rate": 0.025,
+      "target_flag_rate": 0.075,
+      "dr_extra_value_this_month": 274453.3134851982,
+      "oracle_extra_value_this_month": 310308.2530187465,
+      "cumulative_dr_extra_value": 1093848.7238258473,
+      "cumulative_oracle_extra_value": 1147992.3313739323
+    },
+    {
+      "month": 5,
+      "n_customers": 240,
+      "logged_flag_rate": 0.041666666666666664,
+      "target_flag_rate": 0.0875,
+      "dr_extra_value_this_month": 327018.1490157946,
+      "oracle_extra_value_this_month": 331506.8667487676,
+      "cumulative_dr_extra_value": 1420866.8728416418,
+      "cumulative_oracle_extra_value": 1479499.1981227
+    },
+    {
+      "month": 6,
+      "n_customers": 240,
+      "logged_flag_rate": 0.0375,
+      "target_flag_rate": 0.0875,
+      "dr_extra_value_this_month": 313554.8576962125,
+      "oracle_extra_value_this_month": 294421.8440483261,
+      "cumulative_dr_extra_value": 1734421.7305378541,
+      "cumulative_oracle_extra_value": 1773921.042171026
+    }
+  ],
+  "total_dr_estimated_missed_value": 1734421.7305378541,
+  "total_oracle_missed_value": 1773921.042171026,
+  "dr_error_pct": 2.2266668410917805,
+  "narrative": "Using ONLY the logs the old baseline policy would have actually produced over 6 months (never re-running history), the doubly-robust estimator projects that approving discovered policy v1 6 months earlier would have captured an additional Rs 1,734,422 in prevented loss / avoided false-positive cost - within 2.2% of the true synthetic value, the same validation discipline as off_policy_eval.py."
+}

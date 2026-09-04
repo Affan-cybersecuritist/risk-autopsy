@@ -1,0 +1,104 @@
+{
+  "n_seeds": 10,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "per_seed": [
+    {
+      "seed": 0,
+      "precision": 0.9565217391304348,
+      "recall": 1.0,
+      "fp_rate": 0.002224694104560623,
+      "net_value_rs": 1256461.241939958
+    },
+    {
+      "seed": 1,
+      "precision": 0.9767441860465116,
+      "recall": 0.9545454545454546,
+      "fp_rate": 0.0011037527593818985,
+      "net_value_rs": 678913.1370428406
+    },
+    {
+      "seed": 2,
+      "precision": 0.9811320754716981,
+      "recall": 1.0,
+      "fp_rate": 0.0011173184357541898,
+      "net_value_rs": 1290581.7430414564
+    },
+    {
+      "seed": 3,
+      "precision": 1.0,
+      "recall": 0.9807692307692307,
+      "fp_rate": 0.0,
+      "net_value_rs": 1500486.1837189645
+    },
+    {
+      "seed": 4,
+      "precision": 0.9777777777777777,
+      "recall": 1.0,
+      "fp_rate": 0.0011001100110011,
+      "net_value_rs": 1165957.0210889746
+    },
+    {
+      "seed": 5,
+      "precision": 0.9833333333333333,
+      "recall": 0.9833333333333333,
+      "fp_rate": 0.0011273957158962795,
+      "net_value_rs": 1282048.3504097958
+    },
+    {
+      "seed": 6,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp_rate": 0.0,
+      "net_value_rs": 1352038.6162249267
+    },
+    {
+      "seed": 7,
+      "precision": 0.9444444444444444,
+      "recall": 0.9807692307692307,
+      "fp_rate": 0.0033519553072625698,
+      "net_value_rs": 1267793.082786223
+    },
+    {
+      "seed": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp_rate": 0.0,
+      "net_value_rs": 1373835.6827478665
+    },
+    {
+      "seed": 9,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp_rate": 0.0,
+      "net_value_rs": 1369744.5912110894
+    }
+  ],
+  "precision": {
+    "mean": 0.982,
+    "std": 0.0184
+  },
+  "recall": {
+    "mean": 0.9899,
+    "std": 0.0144
+  },
+  "fp_rate": {
+    "mean": 0.001,
+    "std": 0.0011
+  },
+  "net_value_rs": {
+    "mean": 1253785.965,
+    "std": 209504.5725
+  },
+  "method": "10 independent seeds (0-9), each generating a fresh population, ring-grouped 70/30 split, and a freshly-trained DecisionTreeClassifier (max_depth=4, min_samples_leaf=10 - same hyperparameters as this project's v1 in features_and_policy.py). Scoped to the discovery stage only, not the full adversarial arms race (see this file's module docstring for why)."
+}

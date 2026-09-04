@@ -1,0 +1,81 @@
+{
+  "overall_fp_rate_new_policy": 0.004666666666666667,
+  "overall_fp_rate_baseline": 0.05,
+  "flag_multiplier": 2.5,
+  "min_segment_size": 15,
+  "n_segments_flagged": 1,
+  "segments": [
+    {
+      "segment_type": "amount_band",
+      "segment_value": "5-15k",
+      "n_normal_customers": 52,
+      "fp_rate_new_policy": 0.038461538461538464,
+      "fp_rate_baseline": 0.0,
+      "fp_rate_vs_population_ratio": 8.241758241758241,
+      "flagged_as_outlier": true
+    },
+    {
+      "segment_type": "account_age_band",
+      "segment_value": "0-10d",
+      "n_normal_customers": 434,
+      "fp_rate_new_policy": 0.009216589861751152,
+      "fp_rate_baseline": 0.1359447004608295,
+      "fp_rate_vs_population_ratio": 1.9749835418038182,
+      "flagged_as_outlier": false
+    },
+    {
+      "segment_type": "account_age_band",
+      "segment_value": "11-20d",
+      "n_normal_customers": 640,
+      "fp_rate_new_policy": 0.0078125,
+      "fp_rate_baseline": 0.1421875,
+      "fp_rate_vs_population_ratio": 1.6741071428571428,
+      "flagged_as_outlier": false
+    },
+    {
+      "segment_type": "account_age_band",
+      "segment_value": "21-30d",
+      "n_normal_customers": 583,
+      "fp_rate_new_policy": 0.00686106346483705,
+      "fp_rate_baseline": 0.0,
+      "fp_rate_vs_population_ratio": 1.4702278853222248,
+      "flagged_as_outlier": false
+    },
+    {
+      "segment_type": "amount_band",
+      "segment_value": "0-5k",
+      "n_normal_customers": 2798,
+      "fp_rate_new_policy": 0.004288777698355968,
+      "fp_rate_baseline": 0.0,
+      "fp_rate_vs_population_ratio": 0.9190237925048502,
+      "flagged_as_outlier": false
+    },
+    {
+      "segment_type": "account_age_band",
+      "segment_value": "30d+",
+      "n_normal_customers": 1343,
+      "fp_rate_new_policy": 0.0007446016381236039,
+      "fp_rate_baseline": 0.0,
+      "fp_rate_vs_population_ratio": 0.1595574938836294,
+      "flagged_as_outlier": false
+    },
+    {
+      "segment_type": "amount_band",
+      "segment_value": "40k+",
+      "n_normal_customers": 34,
+      "fp_rate_new_policy": 0.0,
+      "fp_rate_baseline": 1.0,
+      "fp_rate_vs_population_ratio": 0.0,
+      "flagged_as_outlier": false
+    },
+    {
+      "segment_type": "amount_band",
+      "segment_value": "25-40k",
+      "n_normal_customers": 116,
+      "fp_rate_new_policy": 0.0,
+      "fp_rate_baseline": 1.0,
+      "fp_rate_vs_population_ratio": 0.0,
+      "flagged_as_outlier": false
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "stages": [
+    {
+      "stage": "Baseline (amount > Rs 25,000)",
+      "loss_prevented_rs": 1191879.54,
+      "false_positives": 57,
+      "false_positive_cost_rs": 45600.0,
+      "net_value_rs": 1146279.54
+    },
+    {
+      "stage": "+ Behavioral features (v1)",
+      "loss_prevented_rs": 1463001.73,
+      "false_positives": 5,
+      "false_positive_cost_rs": 4000.0,
+      "net_value_rs": 1459001.73
+    },
+    {
+      "stage": "+ Adversarial hardening (v2)",
+      "loss_prevented_rs": 1463001.73,
+      "false_positives": 0,
+      "false_positive_cost_rs": 0.0,
+      "net_value_rs": 1463001.73
+    },
+    {
+      "stage": "+ Drift remediation (v3)",
+      "loss_prevented_rs": 1463001.73,
+      "false_positives": 0,
+      "false_positive_cost_rs": 0.0,
+      "net_value_rs": 1463001.73
+    },
+    {
+      "stage": "+ Economic intervention optimizer",
+      "loss_prevented_rs": null,
+      "false_positives": null,
+      "false_positive_cost_rs": null,
+      "net_value_rs": 1462861.3,
+      "note": "Graded ladder net value from intervention_optimizer.py, evaluated on its own test population (same test_set.csv) - not directly loss/FP-decomposable the same way as the binary stages above, since it spans 5 actions, not 2."
+    }
+  ],
+  "method": "Each stage is an already-real, already-committed policy artifact from this project's own pipeline, scored on the SAME held-out test_set.csv with the same reward function (compute_economic_breakdown/compute_binary_net_value) - no retraining happens in this script. This answers 'which stage earns its place' using real numbers already produced elsewhere, not a new experiment."
+}

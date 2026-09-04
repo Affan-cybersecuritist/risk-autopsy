@@ -1,0 +1,30 @@
+{
+  "started_from": "discovered_policy_final.joblib (the deployed policy the drift monitor tested)",
+  "widened_dimension": "time_to_escalation: 10-30 days -> 1-30 days (strict superset)",
+  "reason": "The deployed policy's real decision rule is 'max_amount > Rs 7,964 AND time_to_escalation > 7 days'. src/coevolution.py's own attacker search sampled time_to_escalation only from 10-30 days, never below 10 - so the zero-evasions-found, fully-converged certificate never actually tested a fast-strike ring. This monitor simulates rings gradually adapting toward a faster strike time and shows recall collapsing once real-world behavior moves outside the envelope that was actually tested.",
+  "generation_log": [
+    {
+      "generation": 1,
+      "evasions_found": 133,
+      "search_budget": 500,
+      "test_precision": 1.0,
+      "test_recall": 1.0,
+      "test_fp": 0
+    },
+    {
+      "generation": 2,
+      "evasions_found": 0,
+      "search_budget": 500,
+      "test_precision": 1.0,
+      "test_recall": 1.0,
+      "test_fp": 0
+    }
+  ],
+  "converged": true,
+  "converged_at_generation": 2,
+  "final_precision": 1.0,
+  "final_recall": 1.0,
+  "final_fp": 0,
+  "final_rule_text": "|--- max_amount <= 7964.10\n|   |--- class: 0\n|--- max_amount >  7964.10\n|   |--- n_purchases_before_max <= 1.50\n|   |   |--- class: 0\n|   |--- n_purchases_before_max >  1.50\n|   |   |--- max_amount <= 10278.72\n|   |   |   |--- class: 1\n|   |   |--- max_amount >  10278.72\n|   |   |   |--- class: 1\n",
+  "search_budget_per_generation": 500
+}

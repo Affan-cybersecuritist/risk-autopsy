@@ -1,0 +1,44 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: pytest (full suite, including README claim verification)
+        # `python -m pytest`, not bare `pytest` - this is what actually
+        # matters: `-m` makes Python add the current directory to sys.path
+        # automatically, which is how `from backend import ...` resolves
+        # in every test. Bare `pytest` does not do this and fails with
+        # ModuleNotFoundError - found by watching this exact workflow fail
+        # on its first real run despite 82/82 passing locally, because
+        # locally this was always invoked with `python -m pytest`.
+        run: python -m pytest tests/ -v
+        env:
+          # No GROQ_API_KEY / SUPABASE_SERVICE_ROLE_KEY here on purpose -
+          # every test that needs an LLM either mocks it or is written to
+          # degrade gracefully (see backend/agent.py's fallback hypothesis
+          # path), and no test may depend on a real network call succeeding.
+          PYTHONUNBUFFERED: "1"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: webapp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install
+      - name: tsc -b && vite build (the real build command, not just the dev server)
+        run: npm run build

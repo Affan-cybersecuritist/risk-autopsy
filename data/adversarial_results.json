@@ -1,0 +1,15 @@
+{
+  "n_evaders": 40,
+  "top_feature": "escalation_ratio",
+  "top_feature_importance": 0.962660425233226,
+  "v1_caught": 0,
+  "v1_missed": 40,
+  "v2_caught": 40,
+  "v2_missed": 0,
+  "v2_test_precision": 1.0,
+  "v2_test_recall": 1.0,
+  "v2_test_fp": 0,
+  "v2_loss_prevented": 1463001.7295545326,
+  "total_test_loss": 1463001.7295545328,
+  "v2_rule_text": "|--- address_sharing <= 2.50\n|   |--- class: 0\n|--- address_sharing >  2.50\n|   |--- max_amount <= 6862.32\n|   |   |--- class: 0\n|   |--- max_amount >  6862.32\n|   |   |--- class: 1\n"
+}

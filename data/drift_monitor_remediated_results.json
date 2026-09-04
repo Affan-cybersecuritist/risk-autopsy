@@ -1,0 +1,152 @@
+{
+  "months": [
+    {
+      "month": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        17.0,
+        24.0
+      ]
+    },
+    {
+      "month": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        15.6,
+        22.4
+      ]
+    },
+    {
+      "month": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        14.3,
+        20.7
+      ]
+    },
+    {
+      "month": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        12.9,
+        19.1
+      ]
+    },
+    {
+      "month": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        11.5,
+        17.5
+      ]
+    },
+    {
+      "month": 6,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        10.2,
+        15.8
+      ]
+    },
+    {
+      "month": 7,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        8.8,
+        14.2
+      ]
+    },
+    {
+      "month": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        7.5,
+        12.5
+      ]
+    },
+    {
+      "month": 9,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        6.1,
+        10.9
+      ]
+    },
+    {
+      "month": 10,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        4.7,
+        9.3
+      ]
+    },
+    {
+      "month": 11,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        3.4,
+        7.6
+      ]
+    },
+    {
+      "month": 12,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fp": 0,
+      "loss_total": 422676.05658159975,
+      "loss_missed": 0.0,
+      "typical_strike_wait_days": [
+        2.0,
+        6.0
+      ]
+    }
+  ],
+  "alert_recall_floor": 0.5,
+  "alert_month": null,
+  "compared_against": "data/drift_monitor_results.json (pre-remediation)",
+  "fixed": true
+}
