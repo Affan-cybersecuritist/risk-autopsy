@@ -48,14 +48,24 @@ const GATE_CATEGORIES: Record<string, string> = {
 }
 const GATE_CATEGORY_ORDER = ['Does it work?', 'Can it survive?', 'Is it safe to deploy?']
 
-function ReanalyzeButton({ onClick, loading, label = 'Re-run analysis' }: { onClick: () => void; loading: boolean; label?: string }) {
+function ReanalyzeButton({ onClick, loading, label = 'Re-run analysis', title }: { onClick: () => void; loading: boolean; label?: string; title?: string }) {
   return (
-    <button onClick={onClick} disabled={loading} className="btn-secondary inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm mb-5">
+    <button onClick={onClick} disabled={loading} title={title} className="btn-secondary inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm mb-5">
       {loading ? <Spinner /> : <RefreshCw size={14} />}
       {loading ? 'Running…' : label}
     </button>
   )
 }
+
+// This stage's real computation (decision-tree training + an adversarial
+// search) is genuinely expensive, uses a fixed random seed, and isn't
+// wired as an on-demand callable - it's computed offline by its src/*.py
+// script and served from that artifact ("train offline, serve online",
+// see backend/main.py's module docstring). A button labeled "Re-run
+// analysis" that actually just re-fetches the same unchanging file is a
+// false claim, so these four say what they really do instead.
+const RELOAD_LABEL = 'Reload results'
+const RELOAD_TITLE = "This stage's computation (real decision-tree training / adversarial search) is precomputed offline, not re-run per click - this reloads that same real result, it doesn't recompute it."
 
 export default function Dashboard() {
   const [overview, setOverview] = useState<Overview | null>(null)
@@ -653,7 +663,7 @@ export default function Dashboard() {
           <p className="text-sm mb-4 text-neutral-600">We introspect the model's own feature importances to find its blind spot, then craft an evasion that specifically targets it.</p>
           {loading ? <Skeleton /> : adv && (
             <div>
-              <ReanalyzeButton onClick={runAdversarial} loading={advLoading} />
+              <ReanalyzeButton onClick={runAdversarial} loading={advLoading} label={RELOAD_LABEL} title={RELOAD_TITLE} />
               <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(43,93,94,0.08)', color: '#1e3a5f' }}>
                 <b>Introspection:</b> v1 relies on <code>{adv.top_feature}</code> for <b>{Math.round(adv.top_feature_importance * 100)}%</b> of its decision — that's the blind spot to attack.
               </div>
@@ -689,7 +699,7 @@ export default function Dashboard() {
           </p>
           {loading ? <Skeleton /> : coevo && (
             <div>
-              <ReanalyzeButton onClick={runCoevolution} loading={coevoLoading} />
+              <ReanalyzeButton onClick={runCoevolution} loading={coevoLoading} label={RELOAD_LABEL} title={RELOAD_TITLE} />
               <div className="rounded-2xl overflow-hidden mb-4" style={{ boxShadow: '0 16px 32px -20px rgba(0,0,0,0.15)' }}>
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={coevo.generation_log} margin={{ top: 20, right: 20, bottom: 10, left: 10 }}>
@@ -732,7 +742,7 @@ export default function Dashboard() {
           </p>
           {loading ? <Skeleton /> : ope && (
             <div>
-              <ReanalyzeButton onClick={runOffPolicyEval} loading={opeLoading} />
+              <ReanalyzeButton onClick={runOffPolicyEval} loading={opeLoading} label={RELOAD_LABEL} title={RELOAD_TITLE} />
               <p className="text-xs text-neutral-500 mb-3 italic">In plain terms: this proves you can trust the ₹ value of a new policy from historical logs alone, before it's ever deployed — instead of "grading its own homework" against data it was tuned on.</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                 <MetricTile label="Direct Method (DM)" raw={`₹${ope.V_dm.toFixed(0)}`} />
@@ -762,7 +772,7 @@ export default function Dashboard() {
           </p>
           {loading ? <Skeleton /> : portfolio && (
             <div>
-              <ReanalyzeButton onClick={runPortfolioCheck} loading={portfolioLoading} />
+              <ReanalyzeButton onClick={runPortfolioCheck} loading={portfolioLoading} label={RELOAD_LABEL} title={RELOAD_TITLE} />
               <p className="text-xs text-neutral-500 mb-3 italic">In plain terms: does this policy quietly hurt one group of customers more than everyone else, even though its overall numbers look fine? "vs population" alone can mislead on a small segment — a 57x ratio can be a single false positive in 52 people, not a real pattern — so "Flagged" below requires both a large ratio and a real absolute rate before it's treated as a genuine concern.</p>
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <MetricTile label="Population FP rate (new policy)" value={portfolio.overall_fp_rate_new_policy * 100} suffix="%" decimals={2} />
