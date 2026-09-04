@@ -142,7 +142,7 @@ export default function PolicyTreeDiff({ baselineText, candidateText }: { baseli
   const baselineGraph = useMemo<{ nodes: Node[]; edges: Edge[] }>(() => {
     // Baseline is always the single documented rule (passed in verbatim,
     // not re-derived), not a real sklearn export - one split, two leaves.
-    const conditionLine = (baselineText || 'max_purchase_amount > ₹25,000').split('\n')[0].replace(/^IF\s*/i, '').replace(/:$/, '')
+    const conditionLine = (baselineText || 'max_amount > ₹25,000').split('\n')[0].replace(/^IF\s*/i, '').replace(/:$/, '')
     return {
       nodes: [
         { id: 'b0', position: { x: 90, y: 0 }, data: { label: conditionLine }, style: { ...NODE_STYLE_BASE, backgroundColor: '#FFFFFF', border: '1px solid #D7D9CD', fontSize: 12, fontWeight: 600, textAlign: 'center' as const, borderRadius: 8 } },

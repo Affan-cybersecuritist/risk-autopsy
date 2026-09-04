@@ -17,6 +17,7 @@ import DevilsAdvocateModal from '../components/DevilsAdvocateModal'
 import AITimelineScrubber from '../components/AITimelineScrubber'
 import VIPFalloutSandbox from '../components/VIPFalloutSandbox'
 import SettingsPanel from '../components/SettingsPanel'
+import FeatureGlossary from '../components/FeatureGlossary'
 import { loadSettings, saveSettings, type Settings } from '../lib/settings'
 import {
   api, type Overview, type AutopsyResult, type PolicyComparison, type AdversarialResults,
@@ -100,6 +101,7 @@ export default function Dashboard() {
   const [historyExpanded, setHistoryExpanded] = useState(false)
   const [settings, setSettings] = useState<Settings>(() => loadSettings())
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [glossaryOpen, setGlossaryOpen] = useState(false)
   const [supabaseConfigured, setSupabaseConfigured] = useState(false)
   const [retrainDepth, setRetrainDepth] = useState(settings.retrainDefaultDepth)
   const [retrainLeaf, setRetrainLeaf] = useState(settings.retrainDefaultLeaf)
@@ -417,7 +419,8 @@ export default function Dashboard() {
   return (
     <div className="relative min-h-screen">
       <Suspense fallback={null}><Background3D /></Suspense>
-      <Sidebar apiOnline={!apiError} onOpenSettings={() => setSettingsOpen(true)} />
+      <Sidebar apiOnline={!apiError} onOpenSettings={() => setSettingsOpen(true)} onOpenGlossary={() => setGlossaryOpen(true)} />
+      <FeatureGlossary open={glossaryOpen} onClose={() => setGlossaryOpen(false)} />
       <SettingsPanel
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
@@ -575,7 +578,7 @@ export default function Dashboard() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <div className="flex items-center gap-2 font-bold mb-2"><span className="w-2 h-2 rounded-full bg-[#A6392F]" />Baseline (industry-standard)</div>
-                  <pre className="code-block mb-3">{'IF max_purchase_amount > ₹25,000:\n    FLAG for step-up verification'}</pre>
+                  <pre className="code-block mb-3">{'IF max_amount > ₹25,000:\n    FLAG for step-up verification'}</pre>
                   <div className="grid grid-cols-2 gap-3">
                     <MetricTile label="Precision" value={policy.baseline.precision * 100} suffix="%" decimals={1} />
                     <MetricTile label="Recall" value={policy.baseline.recall * 100} suffix="%" decimals={1} />
@@ -586,7 +589,7 @@ export default function Dashboard() {
                 <div>
                   <div className="flex items-center gap-2 font-bold mb-2"><span className="w-2 h-2 rounded-full bg-emerald-500" />Discovered v1 (behavioral)</div>
                   <div className="mb-3">
-                    <PolicyTreeDiff baselineText={'IF max_purchase_amount > ₹25,000:\n    FLAG for step-up verification'} candidateText={policy.rule_text} />
+                    <PolicyTreeDiff baselineText={'IF max_amount > ₹25,000:\n    FLAG for step-up verification'} candidateText={policy.rule_text} />
                   </div>
                   {(() => {
                     const ambiguous = difficultyTiers?.tiers.find(t => t.tier === 'ambiguous')

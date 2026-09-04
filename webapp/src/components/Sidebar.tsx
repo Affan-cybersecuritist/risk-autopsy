@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Microscope, ChevronDown, Settings } from 'lucide-react'
+import { Microscope, ChevronDown, Settings, BookOpen } from 'lucide-react'
 
 // The primary spine: what a judge skimming for 90 seconds needs to see.
 // Everything else is real, load-bearing evidence for these claims - not
@@ -30,7 +30,7 @@ const DEEP_SECTIONS = [
 
 const SECTIONS = [...PRIMARY_SECTIONS, ...DEEP_SECTIONS]
 
-export default function Sidebar({ apiOnline, onOpenSettings }: { apiOnline: boolean; onOpenSettings: () => void }) {
+export default function Sidebar({ apiOnline, onOpenSettings, onOpenGlossary }: { apiOnline: boolean; onOpenSettings: () => void; onOpenGlossary: () => void }) {
   const [active, setActive] = useState('sec-1')
   const [deepOpen, setDeepOpen] = useState(false)
 
@@ -139,13 +139,22 @@ export default function Sidebar({ apiOnline, onOpenSettings }: { apiOnline: bool
             <span className={`w-2 h-2 rounded-full ${apiOnline ? 'bg-emerald-500' : 'bg-red-400'}`} />
             {apiOnline ? 'Backend live' : 'Backend offline'}
           </div>
-          <button
-            onClick={onOpenSettings}
-            title="Settings"
-            className="text-neutral-400 hover:text-[#2B5D5E] transition-colors flex-none"
-          >
-            <Settings size={15} />
-          </button>
+          <div className="flex items-center gap-3 flex-none">
+            <button
+              onClick={onOpenGlossary}
+              title="Feature glossary"
+              className="text-neutral-400 hover:text-[#2B5D5E] transition-colors"
+            >
+              <BookOpen size={15} />
+            </button>
+            <button
+              onClick={onOpenSettings}
+              title="Settings"
+              className="text-neutral-400 hover:text-[#2B5D5E] transition-colors"
+            >
+              <Settings size={15} />
+            </button>
+          </div>
         </div>
         <div className="text-[11px] text-neutral-400 mt-1">Every loss becomes a defense.</div>
       </div>
