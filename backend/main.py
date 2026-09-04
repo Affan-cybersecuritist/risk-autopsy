@@ -186,8 +186,8 @@ def blast_radius_customer_letter(customer_id: int):
         raise HTTPException(status_code=404, detail=f"customer {customer_id} has no blast-radius flip on record")
     try:
         letter = llm.generate_customer_letter(row)
-    except RuntimeError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"letter unavailable: {e}")
     return {"customer_id": customer_id, "flip": row["flip"], "letter": letter}
 
 
@@ -484,8 +484,8 @@ def autopsy_narrative(customer_id: int):
     autopsy_data = autopsy(customer_id)
     try:
         text = llm.generate_narrative(autopsy_data)
-    except RuntimeError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"narrative unavailable: {e}")
     return {"customer_id": customer_id, "narrative": text}
 
 
@@ -520,8 +520,8 @@ def chat(req: ChatRequest):
 
     try:
         answer = llm.chat_answer(req.question, context, [m.model_dump() for m in req.history])
-    except RuntimeError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"chat unavailable: {e}")
     return {"answer": answer}
 
 
@@ -602,8 +602,13 @@ async def upload_dataset(file: UploadFile = File(...)):
     sample_rows = df.head(3).to_dict("records")
     try:
         mapping = llm.infer_column_mapping(list(df.columns), sample_rows)
-    except RuntimeError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        # RuntimeError (no key set) and any live-call failure (rate limit,
+        # network) both need to land here - an uncaught exception from the
+        # Groq SDK previously escaped past this except-RuntimeError-only
+        # clause as a raw 500, which the browser surfaces as an opaque
+        # "Failed to fetch" instead of a readable error.
+        raise HTTPException(status_code=503, detail=f"column mapping unavailable: {e}")
 
     try:
         mapped = dataset_mod.apply_mapping(df, mapping)

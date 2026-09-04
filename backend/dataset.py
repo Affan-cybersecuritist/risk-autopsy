@@ -46,7 +46,26 @@ def apply_mapping(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
         raise ValueError(f"could not map required columns: {missing}")
     out = pd.DataFrame({k: df[mapping[k]] for k in REQUIRED})
     out["amount"] = pd.to_numeric(out["amount"], errors="coerce")
-    out["day"] = pd.to_numeric(out["day"], errors="coerce")
+
+    # "day" is meant to be a numeric day-index ("days since account
+    # opened"), but a real merchant export is far more likely to have an
+    # actual calendar date/timestamp column, and the LLM column-mapper
+    # reasonably maps one here (CANONICAL_COLUMNS below describes "day" as
+    # accepting a timestamp too). Coercing a date string straight to numeric
+    # silently NaNs every row, which used to make apply_mapping drop the
+    # entire upload - a confusing all-zero "success" rather than a working
+    # analysis. Try numeric first; if that's mostly garbage, treat the
+    # column as a real date and derive each customer's day-index as days
+    # since that customer's own first transaction, which is what the rest
+    # of this analysis actually needs.
+    numeric_day = pd.to_numeric(out["day"], errors="coerce")
+    if numeric_day.notna().mean() < 0.5:
+        parsed_dates = pd.to_datetime(out["day"], errors="coerce")
+        if parsed_dates.notna().mean() > 0.5:
+            first_seen = parsed_dates.groupby(out["customer_id"]).transform("min")
+            numeric_day = (parsed_dates - first_seen).dt.days
+    out["day"] = numeric_day
+
     out = out.dropna(subset=["amount", "day"])
     return out
 
