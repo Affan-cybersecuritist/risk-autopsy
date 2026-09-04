@@ -34,7 +34,7 @@ function Particles() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial color="#B8860B" size={0.035} transparent opacity={0.32} />
+      <pointsMaterial color="#2B5D5E" size={0.035} transparent opacity={0.32} />
     </points>
   )
 }
@@ -43,8 +43,8 @@ export default function Background3D() {
   return (
     <div className="fixed inset-0 -z-10">
       <Canvas camera={{ position: [0, 0, 9], fov: 50 }} gl={{ alpha: true, antialias: true }}>
-        <Wireframe position={[3.5, 1.5, -2]} size={3.4} color="#B8860B" opacity={0.15} speed={[0.0009, 0.0013]} />
-        <Wireframe position={[-4, -2, -3]} size={2.3} color="#D4AF37" opacity={0.11} speed={[-0.0007, -0.0010]} />
+        <Wireframe position={[3.5, 1.5, -2]} size={3.4} color="#2B5D5E" opacity={0.15} speed={[0.0009, 0.0013]} />
+        <Wireframe position={[-4, -2, -3]} size={2.3} color="#3E7A7B" opacity={0.11} speed={[-0.0007, -0.0010]} />
         <Particles />
       </Canvas>
       <div

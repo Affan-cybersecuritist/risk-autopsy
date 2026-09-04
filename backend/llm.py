@@ -214,3 +214,80 @@ for exactly these keys: {list(CANONICAL_COLUMNS.keys())}. No explanation."""
         response_format={"type": "json_object"},
     )
     return json.loads(resp.choices[0].message.content)
+
+
+# Every dashboard section id the chat's command layer is allowed to scroll
+# to. Kept in sync by hand with webapp/src/components/Sidebar.tsx's section
+# list - there's no shared source of truth across the Python/TypeScript
+# boundary, so a renamed section on the frontend needs updating here too.
+_VALID_SECTION_IDS = [
+    "sec-1", "sec-2", "sec-3", "sec-4", "sec-4-5", "sec-4-6", "sec-4-7",
+    "sec-4-8", "sec-4-9", "sec-4-10", "sec-4-11", "sec-4-12", "sec-4-13",
+    "sec-4-14", "sec-4-15", "sec-5", "sec-6",
+]
+_VALID_INTENTS = ("navigate", "retrain", "run_agent", "chat")
+
+
+def classify_command_intent(text: str) -> dict:
+    """Classifies free text (typed or voice-transcribed) into one of a fixed
+    set of actions this app can actually perform, or 'chat' if it's just a
+    question or conversation. Used as a smarter fallback when the frontend's
+    client-side keyword matcher doesn't recognize a phrasing.
+
+    The safety boundary here is structural, not a prompt instruction the
+    model could be argued out of: 'approve' and 'deploy' are not members of
+    the intent enum at all, so there is no valid output this function can
+    ever produce that authorizes one - same as the rest of this app, where
+    the LLM proposes and code (here, a fixed whitelist) verifies. The
+    section_id is independently re-validated against the real list below
+    regardless of what the model returns, exactly like every other LLM
+    output in this project is checked rather than trusted."""
+    system = f"""Classify the user's message into exactly one intent for a fraud-risk
+policy dashboard. Respond ONLY with JSON: {{"intent": "navigate" | "retrain" | "run_agent" | "chat", "section_id": string or null}}
+
+Rules:
+- "navigate": user wants to see or scroll to a specific dashboard section.
+  Pick section_id from EXACTLY this list, no other value: {_VALID_SECTION_IDS}
+  If they mean the first/top section use "sec-1"; the last/final section use "sec-6".
+- "retrain": user wants to retrain or train a new policy candidate.
+- "run_agent": user wants to run the autonomous risk policy engineer.
+- "chat": anything else - questions about the data, greetings, small talk,
+  or a request to approve/deploy/activate/publish a policy. This app never
+  does that from chat, by design - there is no intent for it, so classify
+  those as "chat" and the reply will explain why, not attempt it.
+section_id must be null unless intent is "navigate"."""
+
+    try:
+        resp = _client().chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "system", "content": system}, {"role": "user", "content": text}],
+            temperature=0,
+            # Generous on purpose: the system prompt has to restate the full
+            # section-id list, and a model that runs out of budget mid-JSON
+            # produces invalid JSON, not a short valid one - a hard failure
+            # (see the broad except below), not a graceful truncation.
+            max_tokens=200,
+            response_format={"type": "json_object"},
+        )
+    except RuntimeError:
+        raise  # no GROQ_API_KEY - let the caller's existing 503 handling report this
+    except Exception:
+        # Any other Groq-side failure (bad request, JSON validation, rate
+        # limit, network) - degrade to "chat" exactly like every other AI
+        # feature in this app degrades when Groq misbehaves, rather than
+        # crashing the request. Voice/typed commands still work via the
+        # client-side keyword matcher regardless of this endpoint's health.
+        return {"intent": "chat", "section_id": None}
+
+    try:
+        parsed = json.loads(resp.choices[0].message.content)
+    except (json.JSONDecodeError, TypeError, AttributeError):
+        return {"intent": "chat", "section_id": None}
+
+    intent = parsed.get("intent")
+    if intent not in _VALID_INTENTS:
+        intent = "chat"
+    section_id = parsed.get("section_id")
+    if intent != "navigate" or section_id not in _VALID_SECTION_IDS:
+        section_id = None
+    return {"intent": intent, "section_id": section_id}

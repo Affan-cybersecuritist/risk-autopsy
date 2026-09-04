@@ -11,3 +11,4 @@ reportlab==5.0.0
 requests==2.34.2
 pypdf==6.16.2
 pytest==8.2.2
+edge-tts==7.2.8

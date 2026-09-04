@@ -26,6 +26,15 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
 
   useEffect(() => () => streamRef.current?.getTracks().forEach(t => t.stop()), [])
 
+  // Mounts/unmounts with the modal (parent conditionally renders it) - locks
+  // the page behind so a scroll gesture aimed at this modal can't leak
+  // through to the dashboard underneath.
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [])
+
   async function handleLogin() {
     setMsg(null)
     if (!email || !password) { setMsg({ text: 'Enter your email and password.', type: 'error' }); return }
@@ -119,7 +128,7 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
     }
   }
 
-  const ringClass = { scanning: 'border-[#B8860B]', match: 'border-[#2E7D32]', nomatch: 'border-[#B23A48]' }[ringState]
+  const ringClass = { scanning: 'border-[#2B5D5E]', match: 'border-[#356B3F]', nomatch: 'border-[#A6392F]' }[ringState]
 
   return (
     <AnimatePresence>
@@ -132,12 +141,12 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
           <button onClick={onClose} className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-700"><X size={18} /></button>
 
           <div className="flex items-center gap-2.5 mb-1">
-            <ShieldCheck size={20} className="text-[#B8860B]" />
+            <ShieldCheck size={20} className="text-[#2B5D5E]" />
             <h2 className="text-lg font-bold">Verify identity to approve</h2>
           </div>
           <p className="text-[13px] text-neutral-500 mb-5">This policy affects real transaction decisions. Approval requires a verified human — this system never auto-deploys.</p>
 
-          {msg && <div className={`text-[13px] px-3 py-2.5 rounded-[10px] mb-4 ${msg.type === 'error' ? 'bg-[#B23A48]/8 text-[#B23A48]' : 'bg-[#2E7D32]/8 text-[#2E7D32]'}`}>{msg.text}</div>}
+          {msg && <div className={`text-[13px] px-3 py-2.5 rounded-[10px] mb-4 ${msg.type === 'error' ? 'bg-[#A6392F]/8 text-[#A6392F]' : 'bg-[#356B3F]/8 text-[#356B3F]'}`}>{msg.text}</div>}
 
           {step === 'login' && (
             <>
@@ -148,7 +157,7 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
               <button onClick={handleLogin} disabled={busy} className="gold-btn w-full py-3 rounded-xl mb-3">
                 {busy ? 'Signing in…' : 'Continue to face verification'}
               </button>
-              <p className="text-xs text-center text-neutral-400">No reviewer account yet? <Link to="/account" className="text-[#B8860B] font-semibold">Create one</Link></p>
+              <p className="text-xs text-center text-neutral-400">No reviewer account yet? <Link to="/account" className="text-[#2B5D5E] font-semibold">Create one</Link></p>
             </>
           )}
 
@@ -168,7 +177,7 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
             <div className="text-center py-4">
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 15 }}
                 className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-white"
-                style={{ background: 'linear-gradient(135deg,#3fae4a,#2E7D32)' }}>
+                style={{ background: 'linear-gradient(135deg,#3fae4a,#356B3F)' }}>
                 <Check size={28} strokeWidth={3} />
               </motion.div>
               <div className="font-bold">Identity verified</div>

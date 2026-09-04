@@ -170,15 +170,15 @@ export default function Login() {
 
   const ringClass = {
     idle: 'border-transparent',
-    scanning: 'border-[#B8860B] shadow-[inset_0_0_40px_rgba(184,134,11,0.25)] animate-pulse',
-    match: 'border-[#2E7D32] shadow-[inset_0_0_40px_rgba(46,125,50,0.25)]',
-    nomatch: 'border-[#B23A48] shadow-[inset_0_0_40px_rgba(178,58,72,0.25)]',
+    scanning: 'border-[#2B5D5E] shadow-[inset_0_0_40px_rgba(43,93,94,0.25)] animate-pulse',
+    match: 'border-[#356B3F] shadow-[inset_0_0_40px_rgba(53,107,63,0.25)]',
+    nomatch: 'border-[#A6392F] shadow-[inset_0_0_40px_rgba(166,57,47,0.25)]',
   }[ringState]
 
   const msgClass = msg ? {
-    error: 'bg-[#B23A48]/8 text-[#B23A48]',
-    info: 'bg-[#B8860B]/8 text-[#8a6100]',
-    ok: 'bg-[#2E7D32]/8 text-[#2E7D32]',
+    error: 'bg-[#A6392F]/8 text-[#A6392F]',
+    info: 'bg-[#2B5D5E]/8 text-[#966A22]',
+    ok: 'bg-[#356B3F]/8 text-[#356B3F]',
   }[msg.type] : ''
 
   return (
@@ -187,7 +187,7 @@ export default function Login() {
 
       <div className="fixed top-8 left-10 flex items-center gap-3 z-10">
         <div className="w-[34px] h-[34px] rounded-[9px] flex items-center justify-center text-white"
-             style={{ background: 'linear-gradient(135deg,#D4AF37,#B8860B)', boxShadow: '0 4px 14px rgba(184,134,11,0.35)' }}>
+             style={{ background: 'linear-gradient(135deg,#3E7A7B,#2B5D5E)', boxShadow: '0 4px 14px rgba(43,93,94,0.35)' }}>
           <Microscope size={17} />
         </div>
         <div>
@@ -209,7 +209,7 @@ export default function Login() {
               placeholder="••••••••" className="input" /></Field>
             <button onClick={handleLogin} className="gold-btn w-full py-3 rounded-xl mt-2">Continue</button>
             <div className="text-center mt-4 text-[13px] text-neutral-500">
-              New here? <a onClick={() => { setStep('signup'); setMsg(null) }} className="text-[#B8860B] font-semibold cursor-pointer">Create an account</a>
+              New here? <a onClick={() => { setStep('signup'); setMsg(null) }} className="text-[#2B5D5E] font-semibold cursor-pointer">Create an account</a>
             </div>
           </motion.div>
         )}
@@ -226,7 +226,7 @@ export default function Login() {
               placeholder="min 6 characters" className="input" /></Field>
             <button onClick={handleSignup} className="gold-btn w-full py-3 rounded-xl mt-2">Create account</button>
             <div className="text-center mt-4 text-[13px] text-neutral-500">
-              Already have an account? <a onClick={() => { setStep('login'); setMsg(null) }} className="text-[#B8860B] font-semibold cursor-pointer">Sign in</a>
+              Already have an account? <a onClick={() => { setStep('login'); setMsg(null) }} className="text-[#2B5D5E] font-semibold cursor-pointer">Sign in</a>
             </div>
           </motion.div>
         )}
@@ -256,7 +256,7 @@ export default function Login() {
             className="glass-card w-[420px] max-w-[92vw] p-9 z-10 text-center">
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 15 }}
               className="w-[72px] h-[72px] mx-auto mb-4 rounded-full flex items-center justify-center text-white"
-              style={{ background: 'linear-gradient(135deg,#3fae4a,#2E7D32)', boxShadow: '0 14px 30px rgba(46,125,50,0.35)' }}>
+              style={{ background: 'linear-gradient(135deg,#3fae4a,#356B3F)', boxShadow: '0 14px 30px rgba(53,107,63,0.35)' }}>
               <Check size={34} strokeWidth={3} />
             </motion.div>
             <h1 className="text-[22px] font-bold mb-1">Access granted</h1>

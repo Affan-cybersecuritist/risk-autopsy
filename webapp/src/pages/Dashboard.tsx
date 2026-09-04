@@ -16,6 +16,8 @@ import PolicyTreeDiff from '../components/PolicyTreeDiff'
 import DevilsAdvocateModal from '../components/DevilsAdvocateModal'
 import AITimelineScrubber from '../components/AITimelineScrubber'
 import VIPFalloutSandbox from '../components/VIPFalloutSandbox'
+import SettingsPanel from '../components/SettingsPanel'
+import { loadSettings, saveSettings, type Settings } from '../lib/settings'
 import {
   api, type Overview, type AutopsyResult, type PolicyComparison, type AdversarialResults,
   type CoevolutionResults, type OffPolicyEvalResults, type PortfolioConflictResults, type BlastRadiusResults,
@@ -26,7 +28,7 @@ import {
   type AblationResult, type MutationTestingResult,
 } from '../lib/api'
 
-const TXN_COLORS: Record<string, string> = { purchase: '#2E86AB', return: '#D4AF37', chargeback: '#D64545' }
+const TXN_COLORS: Record<string, string> = { purchase: '#2B5D5E', return: '#3E7A7B', chargeback: '#A6392F' }
 
 function Spinner() { return <span className="spinner" /> }
 
@@ -60,6 +62,7 @@ export default function Dashboard() {
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [autopsy, setAutopsy] = useState<AutopsyResult | null>(null)
   const [autopsyLoading, setAutopsyLoading] = useState(false)
+  const [autopsyRun, setAutopsyRun] = useState(0)
   const [causalGraph, setCausalGraph] = useState<CausalGraphResult | null>(null)
   const [causalGraphError, setCausalGraphError] = useState<string | null>(null)
 
@@ -94,8 +97,12 @@ export default function Dashboard() {
   const [counterfactual, setCounterfactual] = useState<CounterfactualReplayResults | null>(null)
   const [history, setHistory] = useState<PolicyHistoryEntry[]>([])
   const [historyLoading, setHistoryLoading] = useState(false)
-  const [retrainDepth, setRetrainDepth] = useState(4)
-  const [retrainLeaf, setRetrainLeaf] = useState(10)
+  const [historyExpanded, setHistoryExpanded] = useState(false)
+  const [settings, setSettings] = useState<Settings>(() => loadSettings())
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [supabaseConfigured, setSupabaseConfigured] = useState(false)
+  const [retrainDepth, setRetrainDepth] = useState(settings.retrainDefaultDepth)
+  const [retrainLeaf, setRetrainLeaf] = useState(settings.retrainDefaultLeaf)
   const [retrainBusy, setRetrainBusy] = useState(false)
   const [approvingVersion, setApprovingVersion] = useState<number | null>(null)
   const [apiError, setApiError] = useState<string | null>(null)
@@ -129,7 +136,7 @@ export default function Dashboard() {
       .catch(e => setApiError(String(e)))
       .finally(() => setLoading(false))
 
-    api.health().then(h => setLlmEnabled(h.llm_enabled)).catch(() => setLlmEnabled(false))
+    api.health().then(h => { setLlmEnabled(h.llm_enabled); setSupabaseConfigured(h.supabase_configured) }).catch(() => setLlmEnabled(false))
     api.policyHistory().then(h => setHistory(h.history)).catch(() => {})
     // Loaded separately (not in the fail-fast Promise.all above) - a fresh
     // clone that hasn't run `python src/drift_monitor.py` yet shouldn't
@@ -161,6 +168,7 @@ export default function Dashboard() {
     setNarrativeError(null)
     setCausalGraph(null)
     setCausalGraphError(null)
+    setAutopsyRun(n => n + 1)
     try { setAutopsy(await api.autopsy(selectedId)) }
     catch (e) { setApiError(String(e)) }
     finally { setAutopsyLoading(false) }
@@ -297,12 +305,108 @@ export default function Dashboard() {
     }
   }
 
+  // Every version historically lands at the same 100%/100%/0-FP once past v2 -
+  // ten identical-looking cards is noise, not a decision aid. Render the most
+  // recent version promoted with a "Recommended" ribbon; the rest collapse
+  // behind a toggle so a reviewer sees one clear answer, not ten.
+  function renderVersionCard(v: PolicyHistoryEntry, highlight: boolean) {
+    return (
+      <div
+        key={v.version}
+        className={`rounded-xl px-4 py-3.5 ${highlight ? 'border-2' : 'border border-black/5'}`}
+        style={highlight ? { borderColor: '#3E7A7B', background: 'rgba(150,106,34,0.05)', boxShadow: '0 10px 24px -16px rgba(43,93,94,0.4)' } : {}}
+      >
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+          <div className="flex items-center gap-2">
+            {highlight && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide text-white" style={{ background: 'linear-gradient(135deg,#3E7A7B,#2B5D5E)' }}>
+                Latest
+              </span>
+            )}
+            <div className="font-semibold text-sm">{v.label}</div>
+            {v.deployment_status && (
+              <span className="text-[11px] px-2 py-0.5 rounded-full font-bold" style={{
+                background: v.deployment_status === 'ACTIVE' ? 'rgba(53,107,63,0.15)' : v.deployment_status === 'SUPERSEDED' ? 'rgba(0,0,0,0.06)' : 'rgba(43,93,94,0.15)',
+                color: v.deployment_status === 'ACTIVE' ? '#356B3F' : v.deployment_status === 'SUPERSEDED' ? '#6b6b6b' : '#966A22',
+              }}>
+                {v.deployment_status}
+              </span>
+            )}
+          </div>
+          {v.approved_by ? (
+            <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ background: 'rgba(53,107,63,0.1)', color: '#356B3F' }}>
+              Approved by {v.approved_by}
+            </span>
+          ) : (
+            <button onClick={() => setApprovingVersionNeedsDevilsAdvocate(v.version)} className="btn-secondary text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5">
+              <ShieldCheck size={12} /> Approve this version
+            </button>
+          )}
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <MetricTile label="Precision" value={v.precision * 100} suffix="%" decimals={1} />
+          <MetricTile label="Recall" value={v.recall * 100} suffix="%" decimals={1} />
+          <MetricTile label="False positives" value={v.fp} />
+          <MetricTile label="Loss prevented" raw={`₹${v.loss_prevented.toLocaleString(undefined, { maximumFractionDigits: 0 })}`} />
+        </div>
+        {(() => {
+          const netValue = v.loss_prevented - v.fp_cost
+          const active = history.find(h => h.deployment_status === 'ACTIVE')
+          const activeNetValue = active ? active.loss_prevented - active.fp_cost : null
+          const delta = activeNetValue != null && active && active.version !== v.version ? netValue - activeNetValue : null
+          return (
+            <div className="mt-3 rounded-lg px-3 py-2" style={{ background: 'rgba(53,107,63,0.06)' }}>
+              <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Net economic value</span>{' '}
+              <span className="font-bold">₹{netValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+              {delta != null && (
+                <span className="text-xs ml-2" style={{ color: delta >= 0 ? '#356B3F' : '#A6392F' }}>
+                  ({delta >= 0 ? '+' : ''}₹{delta.toLocaleString(undefined, { maximumFractionDigits: 0 })} vs. active)
+                </span>
+              )}
+            </div>
+          )
+        })()}
+        {v.gates && v.gates.length > 0 ? (
+          <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2">
+              Policy PR — {v.gates.every(g => g.passed) ? 'all checks passed' : `${v.gates.filter(g => !g.passed).length} check(s) failed`}
+              {' '}<span className="font-normal normal-case text-neutral-400">({v.gates.length} machine-enforced gates)</span>
+            </div>
+            {GATE_CATEGORY_ORDER.map(category => {
+              const gatesInCategory = v.gates!.filter(g => (GATE_CATEGORIES[g.name] ?? 'Is it safe to deploy?') === category)
+              if (gatesInCategory.length === 0) return null
+              return (
+                <div key={category} className="mb-2 last:mb-0">
+                  <div className="text-[11px] font-bold text-neutral-400 mb-1">{category}</div>
+                  <div className="space-y-1">
+                    {gatesInCategory.map(g => (
+                      <div key={g.name} className="flex items-start gap-1.5 text-[12.5px]">
+                        {g.passed
+                          ? <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color: '#356B3F' }} />
+                          : <span className="mt-0.5 shrink-0 font-bold" style={{ color: '#A6392F' }}>✕</span>}
+                        <span><b>{g.name}</b> — {g.detail}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        ) : v.gates_note ? (
+          <div className="mt-3 pt-3 text-xs text-neutral-400" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+            Policy PR checklist: {v.gates_note}
+          </div>
+        ) : null}
+      </div>
+    )
+  }
+
   if (apiError) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8">
         <div className="glass-card p-8 max-w-lg text-center">
-          <div className="flex justify-center mb-3"><TriangleAlert size={28} className="text-[#B23A48]" /></div>
-          <div className="text-lg font-bold mb-2 text-[#B23A48]">Backend unreachable</div>
+          <div className="flex justify-center mb-3"><TriangleAlert size={28} className="text-[#A6392F]" /></div>
+          <div className="text-lg font-bold mb-2 text-[#A6392F]">Backend unreachable</div>
           <p className="text-sm text-neutral-600 mb-3">{apiError}</p>
           <p className="text-xs text-neutral-400">Start the API: <code>uvicorn backend.main:app --port 8010</code></p>
         </div>
@@ -313,7 +417,21 @@ export default function Dashboard() {
   return (
     <div className="relative min-h-screen">
       <Suspense fallback={null}><Background3D /></Suspense>
-      <Sidebar apiOnline={!apiError} />
+      <Sidebar apiOnline={!apiError} onOpenSettings={() => setSettingsOpen(true)} />
+      <SettingsPanel
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        settings={settings}
+        onSave={(next) => {
+          setSettings(next)
+          saveSettings(next)
+          setRetrainDepth(next.retrainDefaultDepth)
+          setRetrainLeaf(next.retrainDefaultLeaf)
+        }}
+        llmEnabled={llmEnabled}
+        supabaseConfigured={supabaseConfigured}
+        apiOnline={!apiError}
+      />
       <main className="pl-[272px]">
         <div className="max-w-[860px] mx-auto px-10 py-12">
         <div className="mb-8">
@@ -338,6 +456,7 @@ export default function Dashboard() {
         <GlassCard id="sec-2">
           <SectionHead number={2} title="Autopsy: one flagged customer" subtitle="Reconstruct the exact decision chain that let the loss happen." />
           <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wide block mb-1.5">Customer</label>
+          <p className="text-xs text-neutral-400 mb-1.5">Showing only customers flagged as part of an abuse ring — that's why the IDs start where they do; the customers below that ID are the legitimate population this policy was tested against.</p>
           <select value={selectedId ?? ''} onChange={e => setSelectedId(Number(e.target.value))} className="input mb-3">
             {abuseIds.map(id => <option key={id} value={id}>{id}</option>)}
           </select>
@@ -348,21 +467,36 @@ export default function Dashboard() {
 
           {autopsy && (
             <div>
-              <div className="font-bold text-lg mb-2">Timeline — customer #{autopsy.customer_id}</div>
-              <div className="rounded-2xl overflow-hidden mb-4" style={{ boxShadow: '0 16px 32px -20px rgba(0,0,0,0.15)' }}>
-                <ResponsiveContainer width="100%" height={320}>
-                  <ScatterChart margin={{ top: 30, right: 30, bottom: 10, left: 10 }}>
+              <div className="font-bold text-lg mb-1">Timeline — customer #{autopsy.customer_id}</div>
+              <p className="text-xs text-neutral-500 mb-2">Every transaction this customer made, in order — X is days since account opened, Y is transaction amount. Color shows what kind of transaction it was.</p>
+              <div className="flex items-center gap-4 mb-2">
+                {Object.entries(TXN_COLORS).map(([type, color]) => (
+                  <div key={type} className="flex items-center gap-1.5 text-[11px] font-semibold text-neutral-600 capitalize">
+                    <span className="inline-block w-2.5 h-2.5 rounded-full flex-none" style={{ background: color }} />
+                    {type}
+                  </div>
+                ))}
+              </div>
+              {/* Keyed on autopsyRun so recharts fully unmounts/remounts its
+                  ResponsiveContainer (and ResizeObserver) on every
+                  investigate click, even for the same customer - reusing the
+                  existing instance across re-investigations was hitting a
+                  recharts ResizeObserver feedback loop (RangeError: Maximum
+                  call stack size exceeded). */}
+              <div key={autopsyRun} className="rounded-2xl overflow-hidden mb-4" style={{ boxShadow: '0 16px 32px -20px rgba(0,0,0,0.15)' }}>
+                <ResponsiveContainer width="100%" height={340} debounce={100}>
+                  <ScatterChart margin={{ top: 20, right: 30, bottom: 30, left: 20 }}>
                     <CartesianGrid stroke="rgba(0,0,0,0.06)" />
-                    <XAxis type="number" dataKey="day" name="Day" tick={{ fontSize: 12 }} />
-                    <YAxis type="number" dataKey="amount" name="Amount" tick={{ fontSize: 12 }} />
+                    <XAxis type="number" dataKey="day" name="Day" tick={{ fontSize: 12 }} label={{ value: 'Days since account opened', position: 'insideBottom', offset: -10, fontSize: 11, fill: '#78716c' }} />
+                    <YAxis type="number" dataKey="amount" name="Amount" tick={{ fontSize: 12 }} label={{ value: 'Transaction amount (₹)', angle: -90, position: 'insideLeft', offset: 10, fontSize: 11, fill: '#78716c' }} />
                     <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={((v: unknown) => `₹${Number(v).toLocaleString()}`) as (value: unknown) => string} />
-                    <Scatter data={autopsy.timeline} fill="#2E86AB">
+                    <Scatter data={autopsy.timeline} fill="#2B5D5E">
                       {autopsy.timeline.map((t, i) => <Cell key={i} fill={TXN_COLORS[t.txn_type] ?? '#999'} />)}
                     </Scatter>
                   </ScatterChart>
                 </ResponsiveContainer>
               </div>
-              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(212,175,55,0.12)', color: '#8a6100' }}>
+              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(150,106,34,0.12)', color: '#966A22' }}>
                 <AlertTriangle size={16} className="flex-none mt-0.5" />
                 <span>This customer shares an address with <b>{autopsy.shared_address_members} other accounts</b> — a coordinated ring, not an isolated incident.</span>
               </div>
@@ -372,12 +506,12 @@ export default function Dashboard() {
                 {narrativeLoading ? 'Writing case note…' : 'Generate AI case note'}
               </button>
               {narrative && (
-                <div className="rounded-xl px-4 py-3 text-sm leading-relaxed" style={{ background: 'rgba(184,134,11,0.06)', color: '#3a2e0f' }}>
+                <div className="rounded-xl px-4 py-3 text-sm leading-relaxed" style={{ background: 'rgba(43,93,94,0.06)', color: '#3a2e0f' }}>
                   {narrative}
                 </div>
               )}
               {narrativeError && (
-                <div className="text-[13px] text-[#B23A48] bg-[#B23A48]/8 rounded-lg px-3 py-2">{narrativeError}</div>
+                <div className="text-[13px] text-[#A6392F] bg-[#A6392F]/8 rounded-lg px-3 py-2">{narrativeError}</div>
               )}
 
               {causalGraph && (
@@ -390,20 +524,20 @@ export default function Dashboard() {
                       return (
                         <div key={node.node_id}>
                           <div className="rounded-lg px-3 py-2 text-[12.5px]" style={{
-                            background: isClosest ? 'rgba(184,134,11,0.14)' : 'rgba(0,0,0,0.04)',
-                            border: isClosest ? '1px solid rgba(184,134,11,0.4)' : '1px solid transparent',
+                            background: isClosest ? 'rgba(43,93,94,0.14)' : 'rgba(0,0,0,0.04)',
+                            border: isClosest ? '1px solid rgba(43,93,94,0.4)' : '1px solid transparent',
                           }}>
                             <b>{node.feature}</b> {node.direction} {node.threshold.toLocaleString()}
                             <span className="text-neutral-500"> — customer value {node.customer_value.toLocaleString()}</span>
-                            {isClosest && <span className="ml-1.5 text-[11px] font-bold" style={{ color: '#8a6100' }}>closest call</span>}
+                            {isClosest && <span className="ml-1.5 text-[11px] font-bold" style={{ color: '#966A22' }}>closest call</span>}
                           </div>
                           <div className="text-center text-neutral-300 text-xs">↓</div>
                         </div>
                       )
                     })}
                     <div className="rounded-lg px-3 py-2 text-[12.5px] font-semibold text-center" style={{
-                      background: causalGraph.decision_chain.predicted_class === 'abuse' ? 'rgba(178,58,72,0.12)' : 'rgba(46,125,50,0.12)',
-                      color: causalGraph.decision_chain.predicted_class === 'abuse' ? '#B23A48' : '#2E7D32',
+                      background: causalGraph.decision_chain.predicted_class === 'abuse' ? 'rgba(166,57,47,0.12)' : 'rgba(53,107,63,0.12)',
+                      color: causalGraph.decision_chain.predicted_class === 'abuse' ? '#A6392F' : '#356B3F',
                     }}>
                       Leaf: {causalGraph.decision_chain.predicted_class.toUpperCase()}
                       {' '}(outcome: {causalGraph.outcome.replace('_', ' ')})
@@ -434,13 +568,13 @@ export default function Dashboard() {
           {loading ? <Skeleton /> : policy && (
             <>
               {stressTest && (
-                <div className="rounded-xl px-4 py-2.5 text-xs mb-4" style={{ background: 'rgba(184,134,11,0.08)', color: '#8a6100' }}>
+                <div className="rounded-xl px-4 py-2.5 text-xs mb-4" style={{ background: 'rgba(43,93,94,0.08)', color: '#966A22' }}>
                   Showing the same frozen policy (never retrained) scored against a fresh, harder-by-construction population — genuine customers who look ring-like without being rings. Real numbers from <code>data/difficulty_tiers_results.json</code>, not simulated.
                 </div>
               )}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <div className="flex items-center gap-2 font-bold mb-2"><span className="w-2 h-2 rounded-full bg-[#D64545]" />Baseline (industry-standard)</div>
+                  <div className="flex items-center gap-2 font-bold mb-2"><span className="w-2 h-2 rounded-full bg-[#A6392F]" />Baseline (industry-standard)</div>
                   <pre className="code-block mb-3">{'IF max_purchase_amount > ₹25,000:\n    FLAG for step-up verification'}</pre>
                   <div className="grid grid-cols-2 gap-3">
                     <MetricTile label="Precision" value={policy.baseline.precision * 100} suffix="%" decimals={1} />
@@ -483,11 +617,29 @@ export default function Dashboard() {
                   })()}
                 </div>
               </div>
-              <div className="rounded-xl px-4 py-3 text-sm mt-4" style={{ background: 'rgba(184,134,11,0.08)', color: '#8a6100' }}>
+              <div className="rounded-xl px-4 py-3 text-sm mt-4" style={{ background: 'rgba(43,93,94,0.08)', color: '#966A22' }}>
                 Discovered policy v1 catches <b>{Math.round(policy.discovered.loss_prevented / policy.total_test_loss * 100)}%</b> of held-out loss vs
                 baseline's <b>{Math.round(policy.baseline.loss_prevented / policy.total_test_loss * 100)}%</b>, with{' '}
                 <b>{policy.baseline.fp - policy.discovered.fp} fewer false positives</b>.
               </div>
+              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-xs mt-2.5 text-neutral-500" style={{ background: 'rgba(0,0,0,0.03)' }}>
+                <TriangleAlert size={14} className="flex-none mt-0.5 text-neutral-400" />
+                <span><b>Honest caveat, up front:</b> the 90.6%/100% numbers above are on a held-out population this project's own tooling found to be near-perfectly separable by construction. Scored against a never-seen seed, this same policy gets 98.4% precision — see <button onClick={() => document.getElementById('sec-4-15')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="underline font-semibold">section 4.15, Evaluation rigor</button> for the full harder-conditions stress test.</span>
+              </div>
+              {(() => {
+                const easyTier = difficultyTiers?.tiers.find(t => t.tier === 'easy')
+                const harderTiers = difficultyTiers?.tiers.filter(t => t.tier !== 'easy')
+                const worstHarderPrecision = harderTiers && harderTiers.length > 0 ? Math.min(...harderTiers.map(t => t.precision)) : null
+                const discountFactor = easyTier && easyTier.precision > 0 && worstHarderPrecision != null ? worstHarderPrecision / easyTier.precision : null
+                const adjustedPrecision = discountFactor != null ? policy.discovered.precision * discountFactor : null
+                if (adjustedPrecision == null || !harderTiers) return null
+                const worstTier = harderTiers.find(t => t.precision === worstHarderPrecision)
+                return (
+                  <div className="rounded-xl px-4 py-3 text-xs mt-2.5" style={{ background: 'rgba(150,106,34,0.1)', color: '#966A22' }}>
+                    <b>Real-world-adjusted estimate:</b> precision degrades from {(easyTier!.precision * 100).toFixed(1)}% (easy tier) to {(worstHarderPrecision! * 100).toFixed(1)}% (the "{worstTier?.tier}" tier) — a {((1 - discountFactor!) * 100).toFixed(0)}% relative drop as data gets harder-by-construction. Applying that same discount to the headline {(policy.discovered.precision * 100).toFixed(1)}% gives a conservative <b>~{(adjustedPrecision * 100).toFixed(0)}%</b> as what to actually expect on messier, real-world-shaped data — computed from the difficulty-tier results already in this dashboard (section 4.15), not a new claim.
+                  </div>
+                )
+              })()}
             </>
           )}
         </GlassCard>
@@ -499,14 +651,14 @@ export default function Dashboard() {
           {loading ? <Skeleton /> : adv && (
             <div>
               <ReanalyzeButton onClick={runAdversarial} loading={advLoading} />
-              <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(184,134,11,0.08)', color: '#1e3a5f' }}>
+              <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(43,93,94,0.08)', color: '#1e3a5f' }}>
                 <b>Introspection:</b> v1 relies on <code>{adv.top_feature}</code> for <b>{Math.round(adv.top_feature_importance * 100)}%</b> of its decision — that's the blind spot to attack.
               </div>
               <div className="grid md:grid-cols-2 gap-4 mb-4">
-                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(178,58,72,0.08)', color: '#B23A48' }}>
+                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(166,57,47,0.08)', color: '#A6392F' }}>
                   <b>Policy v1:</b> {adv.v1_missed} / {adv.n_evaders} evasion attempts missed ({Math.round(adv.v1_missed / adv.n_evaders * 100)}% evasion success)
                 </div>
-                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
+                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
                   <b>Policy v2 (retrained):</b> {adv.v2_missed} / {adv.n_evaders} evasion attempts missed ({Math.round(adv.v2_missed / adv.n_evaders * 100)}% evasion success)
                 </div>
               </div>
@@ -518,7 +670,7 @@ export default function Dashboard() {
                 <MetricTile label="Loss prevented" raw={`₹${adv.v2_loss_prevented.toLocaleString(undefined, { maximumFractionDigits: 0 })}`} />
               </div>
               <pre className="code-block mb-3 whitespace-pre-wrap">{adv.v2_rule_text}</pre>
-              <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
+              <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
                 <CheckCircle2 size={16} className="flex-none" /> No regression. v2 is a strict improvement, ready for human approval.
               </div>
             </div>
@@ -542,17 +694,17 @@ export default function Dashboard() {
                     <XAxis dataKey="generation" tick={{ fontSize: 12 }} label={{ value: 'Generation', position: 'bottom', fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip />
-                    <Bar dataKey="evasions_found" fill="#D64545" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="evasions_found" fill="#A6392F" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
               {coevo.converged ? (
-                <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
+                <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
                   <CheckCircle2 size={16} className="flex-none" />
                   <span><b>Converged at generation {coevo.converged_at_generation}</b> — the attacker found zero evasions in a fresh {coevo.search_budget_per_generation}-candidate search.</span>
                 </div>
               ) : (
-                <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(212,175,55,0.12)', color: '#8a6100' }}>
+                <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(150,106,34,0.12)', color: '#966A22' }}>
                   Did not converge within the generation budget — policy still has exploitable gaps.
                 </div>
               )}
@@ -578,6 +730,7 @@ export default function Dashboard() {
           {loading ? <Skeleton /> : ope && (
             <div>
               <ReanalyzeButton onClick={runOffPolicyEval} loading={opeLoading} />
+              <p className="text-xs text-neutral-500 mb-3 italic">In plain terms: this proves you can trust the ₹ value of a new policy from historical logs alone, before it's ever deployed — instead of "grading its own homework" against data it was tuned on.</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                 <MetricTile label="Direct Method (DM)" raw={`₹${ope.V_dm.toFixed(0)}`} />
                 <MetricTile label="IPS only" raw={`₹${ope.V_ips.toFixed(0)}`} />
@@ -589,7 +742,7 @@ export default function Dashboard() {
                 <StatBox label="DM error vs oracle" value={`${ope.dm_error_pct.toFixed(1)}%`} />
                 <StatBox label="IPS error vs oracle" value={`${ope.ips_error_pct.toFixed(1)}%`} />
               </div>
-              <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
+              <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
                 DR's estimate is off from oracle truth by only <b>{ope.dr_error_pct.toFixed(1)}%</b> using logged data alone — dramatically
                 more accurate than DM ({ope.dm_error_pct.toFixed(1)}%) or IPS ({ope.ips_error_pct.toFixed(1)}%) alone. 95% bootstrap CI: [₹{ope.dr_ci_low.toFixed(0)}, ₹{ope.dr_ci_high.toFixed(0)}] per customer.
               </div>
@@ -607,6 +760,7 @@ export default function Dashboard() {
           {loading ? <Skeleton /> : portfolio && (
             <div>
               <ReanalyzeButton onClick={runPortfolioCheck} loading={portfolioLoading} />
+              <p className="text-xs text-neutral-500 mb-3 italic">In plain terms: does this policy quietly hurt one group of customers more than everyone else, even though its overall numbers look fine? "vs population" alone can mislead on a small segment — a 57x ratio can be a single false positive in 52 people, not a real pattern — so "Flagged" below requires both a large ratio and a real absolute rate before it's treated as a genuine concern.</p>
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <MetricTile label="Population FP rate (new policy)" value={portfolio.overall_fp_rate_new_policy * 100} suffix="%" decimals={2} />
                 <MetricTile label="Population FP rate (baseline)" value={portfolio.overall_fp_rate_baseline * 100} suffix="%" decimals={2} />
@@ -621,7 +775,7 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {portfolio.segments.map((s, i) => (
-                      <tr key={i} className={`border-b border-black/5 ${s.flagged_as_outlier ? 'bg-[#B23A48]/5' : ''}`}>
+                      <tr key={i} className={`border-b border-black/5 ${s.flagged_as_outlier ? 'bg-[#A6392F]/5' : ''}`}>
                         <td className="py-2 px-3">{s.segment_type}: {s.segment_value}</td>
                         <td className="py-2 px-3">{s.n_normal_customers}</td>
                         <td className="py-2 px-3">{(s.fp_rate_new_policy * 100).toFixed(2)}%</td>
@@ -666,13 +820,17 @@ export default function Dashboard() {
 
               <div className="font-bold mb-2 text-sm">{blast.worth_reviewing_count} worth a human's attention</div>
               {!blast.llm_annotated && (
-                <p className="text-[12px] text-neutral-400 mb-3">Groq API key not configured — showing raw flips without an AI review note. Set GROQ_API_KEY in backend/.env to enable.</p>
+                <p className="text-[12px] text-neutral-400 mb-3">
+                  {blast.llm_configured === false
+                    ? 'Groq API key not configured — showing raw flips without an AI review note. Set GROQ_API_KEY in backend/.env to enable.'
+                    : `AI review note unavailable right now — showing raw flips instead.${blast.llm_error ? ` (${blast.llm_error})` : ''}`}
+                </p>
               )}
               <div className="space-y-2.5">
                 {blast.worth_reviewing.map(r => (
                   <div key={r.customer_id} className="rounded-xl px-4 py-3 text-sm" style={{
-                    background: r.flip === 'newly_flagged' ? 'rgba(212,175,55,0.10)' : 'rgba(178,58,72,0.08)',
-                    color: r.flip === 'newly_flagged' ? '#8a6100' : '#B23A48',
+                    background: r.flip === 'newly_flagged' ? 'rgba(150,106,34,0.10)' : 'rgba(166,57,47,0.08)',
+                    color: r.flip === 'newly_flagged' ? '#966A22' : '#A6392F',
                   }}>
                     <div className="font-semibold mb-0.5">
                       Customer #{r.customer_id} — {r.flip === 'newly_flagged' ? 'newly flagged, not a known abuser' : 'newly cleared, but is a known abuser'}
@@ -694,13 +852,13 @@ export default function Dashboard() {
                       </button>
                     )}
                     {letterError[r.customer_id] && (
-                      <div className="text-[12px] mt-1.5 text-[#B23A48]">{letterError[r.customer_id]}</div>
+                      <div className="text-[12px] mt-1.5 text-[#A6392F]">{letterError[r.customer_id]}</div>
                     )}
                   </div>
                 ))}
                 <VIPFalloutSandbox />
                 {blast.worth_reviewing.length === 0 && (
-                  <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
+                  <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
                     <CheckCircle2 size={16} className="flex-none" /> Every flip is either a real abuser newly caught or a legitimate customer correctly staying cleared — nothing here needs a second look.
                   </div>
                 )}
@@ -718,7 +876,7 @@ export default function Dashboard() {
             relabeled copy of the same policy.
           </p>
 
-          <div className="rounded-xl px-4 py-3.5 mb-4" style={{ background: 'rgba(184,134,11,0.06)' }}>
+          <div className="rounded-xl px-4 py-3.5 mb-4" style={{ background: 'rgba(43,93,94,0.06)' }}>
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wide block mb-1.5">Max depth (1–10)</label>
@@ -742,8 +900,8 @@ export default function Dashboard() {
             const active = history.find(v => v.deployment_status === 'ACTIVE')
             return (
               <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{
-                background: active ? 'rgba(46,125,50,0.08)' : 'rgba(184,134,11,0.08)',
-                color: active ? '#2E7D32' : '#8a6100',
+                background: active ? 'rgba(53,107,63,0.08)' : 'rgba(43,93,94,0.08)',
+                color: active ? '#356B3F' : '#966A22',
               }}>
                 {active
                   ? <><b>Active policy: {active.label}</b> — every other version is proposed or superseded until a human approves a newer one.</>
@@ -752,88 +910,31 @@ export default function Dashboard() {
             )
           })()}
 
-          <div className="space-y-3">
-            {[...history].reverse().map(v => (
-              <div key={v.version} className="rounded-xl border border-black/5 px-4 py-3.5">
-                <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="font-semibold text-sm">{v.label}</div>
-                    {v.deployment_status && (
-                      <span className="text-[11px] px-2 py-0.5 rounded-full font-bold" style={{
-                        background: v.deployment_status === 'ACTIVE' ? 'rgba(46,125,50,0.15)' : v.deployment_status === 'SUPERSEDED' ? 'rgba(0,0,0,0.06)' : 'rgba(184,134,11,0.15)',
-                        color: v.deployment_status === 'ACTIVE' ? '#2E7D32' : v.deployment_status === 'SUPERSEDED' ? '#6b6b6b' : '#8a6100',
-                      }}>
-                        {v.deployment_status}
-                      </span>
-                    )}
-                  </div>
-                  {v.approved_by ? (
-                    <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ background: 'rgba(46,125,50,0.1)', color: '#2E7D32' }}>
-                      Approved by {v.approved_by}
-                    </span>
-                  ) : (
-                    <button onClick={() => setApprovingVersionNeedsDevilsAdvocate(v.version)} className="btn-secondary text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5">
-                      <ShieldCheck size={12} /> Approve this version
+          {(() => {
+            const sorted = [...history].reverse()
+            const [top, ...earlier] = sorted
+            if (!top) return null
+            return (
+              <div className="space-y-3">
+                {renderVersionCard(top, true)}
+                {earlier.length > 0 && (
+                  <>
+                    <button
+                      onClick={() => setHistoryExpanded(o => !o)}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold text-neutral-500 hover:bg-black/5 transition-colors border border-dashed border-black/10"
+                    >
+                      {historyExpanded ? 'Hide' : 'Show'} {earlier.length} earlier version{earlier.length === 1 ? '' : 's'}
                     </button>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <MetricTile label="Precision" value={v.precision * 100} suffix="%" decimals={1} />
-                  <MetricTile label="Recall" value={v.recall * 100} suffix="%" decimals={1} />
-                  <MetricTile label="False positives" value={v.fp} />
-                  <MetricTile label="Loss prevented" raw={`₹${v.loss_prevented.toLocaleString(undefined, { maximumFractionDigits: 0 })}`} />
-                </div>
-                {(() => {
-                  const netValue = v.loss_prevented - v.fp_cost
-                  const active = history.find(h => h.deployment_status === 'ACTIVE')
-                  const activeNetValue = active ? active.loss_prevented - active.fp_cost : null
-                  const delta = activeNetValue != null && active && active.version !== v.version ? netValue - activeNetValue : null
-                  return (
-                    <div className="mt-3 rounded-lg px-3 py-2" style={{ background: 'rgba(46,125,50,0.06)' }}>
-                      <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Net economic value</span>{' '}
-                      <span className="font-bold">₹{netValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                      {delta != null && (
-                        <span className="text-xs ml-2" style={{ color: delta >= 0 ? '#2E7D32' : '#B23A48' }}>
-                          ({delta >= 0 ? '+' : ''}₹{delta.toLocaleString(undefined, { maximumFractionDigits: 0 })} vs. active)
-                        </span>
-                      )}
-                    </div>
-                  )
-                })()}
-                {v.gates && v.gates.length > 0 ? (
-                  <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                    <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2">
-                      Policy PR — {v.gates.every(g => g.passed) ? 'all checks passed' : `${v.gates.filter(g => !g.passed).length} check(s) failed`}
-                      {' '}<span className="font-normal normal-case text-neutral-400">({v.gates.length} machine-enforced gates)</span>
-                    </div>
-                    {GATE_CATEGORY_ORDER.map(category => {
-                      const gatesInCategory = v.gates!.filter(g => (GATE_CATEGORIES[g.name] ?? 'Is it safe to deploy?') === category)
-                      if (gatesInCategory.length === 0) return null
-                      return (
-                        <div key={category} className="mb-2 last:mb-0">
-                          <div className="text-[11px] font-bold text-neutral-400 mb-1">{category}</div>
-                          <div className="space-y-1">
-                            {gatesInCategory.map(g => (
-                              <div key={g.name} className="flex items-start gap-1.5 text-[12.5px]">
-                                {g.passed
-                                  ? <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color: '#2E7D32' }} />
-                                  : <span className="mt-0.5 shrink-0 font-bold" style={{ color: '#B23A48' }}>✕</span>}
-                                <span><b>{g.name}</b> — {g.detail}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                ) : v.gates_note ? (
-                  <div className="mt-3 pt-3 text-xs text-neutral-400" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                    Policy PR checklist: {v.gates_note}
-                  </div>
-                ) : null}
+                    {historyExpanded && (
+                      <div className="space-y-3">
+                        {earlier.map(v => renderVersionCard(v, false))}
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
-            ))}
-          </div>
+            )
+          })()}
         </GlassCard>
         {approvingVersionNeedsDevilsAdvocate !== null && (
           <DevilsAdvocateModal
@@ -872,21 +973,21 @@ export default function Dashboard() {
                   <YAxis domain={[0, 1]} tickFormatter={v => `${(v * 100).toFixed(0)}%`} tick={{ fontSize: 11 }} />
                   <Tooltip formatter={((v: unknown) => `${(Number(v) * 100).toFixed(1)}%`) as (value: unknown) => string} labelFormatter={m => `Month ${m}`} />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <ReferenceLine y={drift.alert_recall_floor} stroke="#B23A48" strokeDasharray="4 4"
-                    label={{ value: 'alert floor', position: 'insideTopRight', fontSize: 10, fill: '#B23A48' }} />
-                  <Line type="monotone" dataKey="recall" name="Recall" stroke="#B8860B" strokeWidth={2.5} dot={{ r: 3 }} />
-                  <Line type="monotone" dataKey="precision" name="Precision" stroke="#2E86AB" strokeWidth={2} strokeDasharray="5 3" dot={{ r: 2 }} />
+                  <ReferenceLine y={drift.alert_recall_floor} stroke="#A6392F" strokeDasharray="4 4"
+                    label={{ value: 'alert floor', position: 'insideTopRight', fontSize: 10, fill: '#A6392F' }} />
+                  <Line type="monotone" dataKey="recall" name="Recall" stroke="#2B5D5E" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="precision" name="Precision" stroke="#2B5D5E" strokeWidth={2} strokeDasharray="5 3" dot={{ r: 2 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
             {drift.alert_month ? (
-              <div className="rounded-xl px-4 py-3.5 text-sm" style={{ background: 'rgba(178,58,72,0.08)', color: '#B23A48' }}>
+              <div className="rounded-xl px-4 py-3.5 text-sm" style={{ background: 'rgba(166,57,47,0.08)', color: '#A6392F' }}>
                 <div className="font-bold mb-1 flex items-center gap-2"><TriangleAlert size={16} /> Drift alert: recall fell below {(drift.alert_recall_floor * 100).toFixed(0)}% at month {drift.alert_month}</div>
                 <div className="text-neutral-700 mb-2">{drift.root_cause}</div>
                 <div className="text-neutral-500 text-[13px]"><b>Recommended action:</b> {drift.recommended_action}</div>
               </div>
             ) : (
-              <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
+              <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
                 <CheckCircle2 size={16} className="flex-none" /> No drift alert across the simulated window.
               </div>
             )}
@@ -894,7 +995,7 @@ export default function Dashboard() {
             {remediation && (
               <div className="mt-5 pt-5" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                 <div className="font-bold text-sm mb-1.5 flex items-center gap-2">
-                  <ShieldCheck size={16} className="text-[#2E7D32]" /> Closed the loop: the gap above has been patched and re-verified
+                  <ShieldCheck size={16} className="text-[#356B3F]" /> Closed the loop: the gap above has been patched and re-verified
                 </div>
                 <p className="text-sm mb-4 text-neutral-600">
                   The finding above didn't stop at "recommended action." <code>src/remediate_drift.py</code> re-ran the adversarial
@@ -916,12 +1017,12 @@ export default function Dashboard() {
                       <YAxis domain={[0, 1]} tickFormatter={v => `${(v * 100).toFixed(0)}%`} tick={{ fontSize: 11 }} />
                       <Tooltip formatter={((v: unknown) => `${(Number(v) * 100).toFixed(1)}%`) as (value: unknown) => string} labelFormatter={m => `Month ${m}`} />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
-                      <Line type="monotone" dataKey="recall_before" name="Recall — before remediation" stroke="#B23A48" strokeWidth={2} strokeDasharray="4 3" dot={{ r: 2 }} />
-                      <Line type="monotone" dataKey="recall_after" name="Recall — after remediation (v3)" stroke="#2E7D32" strokeWidth={2.5} dot={{ r: 3 }} />
+                      <Line type="monotone" dataKey="recall_before" name="Recall — before remediation" stroke="#A6392F" strokeWidth={2} strokeDasharray="4 3" dot={{ r: 2 }} />
+                      <Line type="monotone" dataKey="recall_after" name="Recall — after remediation (v3)" stroke="#356B3F" strokeWidth={2.5} dot={{ r: 3 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: remediation.drift.fixed ? 'rgba(46,125,50,0.08)' : 'rgba(178,58,72,0.08)', color: remediation.drift.fixed ? '#2E7D32' : '#B23A48' }}>
+                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: remediation.drift.fixed ? 'rgba(53,107,63,0.08)' : 'rgba(166,57,47,0.08)', color: remediation.drift.fixed ? '#356B3F' : '#A6392F' }}>
                   {remediation.drift.fixed
                     ? <><CheckCircle2 size={16} className="inline mr-1.5 -mt-0.5" />Verified: recall never drops below {(drift.alert_recall_floor * 100).toFixed(0)}% across all 12 months, including the previously-fatal fast-strike region. Registered in Version History as v3, awaiting the same identity-verified approval as any other version.</>
                     : <>Remediation attempted but not fully verified — still alerts at month {remediation.drift.alert_month}.</>}
@@ -951,11 +1052,11 @@ export default function Dashboard() {
                           </span>
                         </div>
                         <div className="h-2 rounded-full bg-black/5 overflow-hidden relative">
-                          <div className="h-full rounded-full absolute inset-y-0 left-0" style={{ width: `${pre}%`, background: pre < 90 ? '#B23A48' : '#B8860B' }} />
+                          <div className="h-full rounded-full absolute inset-y-0 left-0" style={{ width: `${pre}%`, background: pre < 90 ? '#A6392F' : '#2B5D5E' }} />
                         </div>
                         {post !== undefined && post !== null && post !== pre && (
                           <div className="h-2 rounded-full bg-black/5 overflow-hidden relative mt-1">
-                            <div className="h-full rounded-full absolute inset-y-0 left-0" style={{ width: `${post}%`, background: '#2E7D32' }} />
+                            <div className="h-full rounded-full absolute inset-y-0 left-0" style={{ width: `${post}%`, background: '#356B3F' }} />
                           </div>
                         )}
                       </div>
@@ -974,6 +1075,7 @@ export default function Dashboard() {
                   dimension, or two combined — that flips the decision to evaded? A policy that needs a bigger change
                   to defeat has a smaller attack surface, even at the same raw coverage number.
                 </p>
+                <p className="text-xs text-neutral-500 mb-4 italic">In plain terms: "0.15 normalized units" means a ring only had to nudge one behavior 15% of the way across its realistic range to slip through — a small, cheap change for an attacker. "Fully robust" means no such nudge, however small, got past it.</p>
                 {(() => {
                   const pre = evasionDistance.pre_remediation
                   const post = evasionDistance.post_remediation
@@ -987,13 +1089,13 @@ export default function Dashboard() {
                       <div className="mb-3 last:mb-0">
                         <div className="flex justify-between text-[12.5px] mb-1">
                           <span className="text-neutral-500">{label}</span>
-                          <span className="font-medium" style={{ color: inRedZone ? '#B23A48' : '#2E7D32' }}>
+                          <span className="font-medium" style={{ color: inRedZone ? '#A6392F' : '#356B3F' }}>
                             {robust ? 'fully robust — no evasion found' : `${o.minimum_distance!.toFixed(3)} via ${o.dimensions?.join(' + ')}`}
                           </span>
                         </div>
-                        <div className="h-3 rounded-full relative" style={{ background: 'linear-gradient(90deg, #B23A48 0%, #B23A48 15%, #B8860B 15%, #B8860B 40%, #2E7D32 40%, #2E7D32 100%)', opacity: 0.25 }}>
+                        <div className="h-3 rounded-full relative" style={{ background: 'linear-gradient(90deg, #A6392F 0%, #A6392F 15%, #2B5D5E 15%, #2B5D5E 40%, #356B3F 40%, #356B3F 100%)', opacity: 0.25 }}>
                           <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-white shadow"
-                               style={{ left: `calc(${pct}% - 7px)`, background: inRedZone ? '#B23A48' : '#2E7D32' }} />
+                               style={{ left: `calc(${pct}% - 7px)`, background: inRedZone ? '#A6392F' : '#356B3F' }} />
                         </div>
                         <div className="flex justify-between text-[10px] text-neutral-400 mt-0.5">
                           <span>0.0 (trivially evaded)</span><span>1.0 (needs a large change)</span>
@@ -1018,6 +1120,7 @@ export default function Dashboard() {
               produced — against {counterfactual.n_historical_months} months of the past, to answer the question a
               business stakeholder actually asks about a delayed rollout: how much did waiting cost us?
             </p>
+            <p className="text-xs text-neutral-500 mb-3 italic">In plain terms: this is the ₹ price tag on the time this policy sat in review instead of running — and "error vs. oracle" is how much to trust that number, since real deployments never get to check their estimate against the true answer the way this synthetic one can.</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div className="metric-tile">
                 <div className="text-xs text-neutral-400 mb-1">DR-estimated missed value</div>
@@ -1036,8 +1139,8 @@ export default function Dashboard() {
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={v => `₹${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={((v: unknown) => `₹${Number(v).toLocaleString()}`) as (value: unknown) => string} labelFormatter={m => `Month ${m}`} />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Line type="monotone" dataKey="cumulative_dr_extra_value" name="Cumulative missed value (DR estimate)" stroke="#B8860B" strokeWidth={2.5} dot={{ r: 3 }} />
-                  <Line type="monotone" dataKey="cumulative_oracle_extra_value" name="True value (oracle, synthetic-only)" stroke="#2E86AB" strokeWidth={1.5} strokeDasharray="5 3" dot={false} />
+                  <Line type="monotone" dataKey="cumulative_dr_extra_value" name="Cumulative missed value (DR estimate)" stroke="#2B5D5E" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="cumulative_oracle_extra_value" name="True value (oracle, synthetic-only)" stroke="#2B5D5E" strokeWidth={1.5} strokeDasharray="5 3" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -1063,7 +1166,7 @@ export default function Dashboard() {
             {agentLoading ? 'Running the full loop (~10s)…' : 'Run autonomous engineer'}
           </button>
           {agentError && (
-            <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(178,58,72,0.08)', color: '#B23A48' }}>
+            <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(166,57,47,0.08)', color: '#A6392F' }}>
               <TriangleAlert size={16} className="flex-none" /> {agentError}
             </div>
           )}
@@ -1077,7 +1180,7 @@ export default function Dashboard() {
                     <div key={i} className="flex gap-2.5">
                       <span className="text-neutral-400 flex-none">+{entry.t.toFixed(2)}s</span>
                       <span className="flex-none" style={{
-                        color: entry.status === 'pass' ? '#2E7D32' : entry.status === 'error' ? '#B23A48' : entry.status === 'blocked' ? '#B23A48' : '#8a6100',
+                        color: entry.status === 'pass' ? '#356B3F' : entry.status === 'error' ? '#A6392F' : entry.status === 'blocked' ? '#A6392F' : '#966A22',
                       }}>
                         {entry.status === 'pass' ? '✓' : entry.status === 'error' ? '✕' : entry.status === 'blocked' ? '⊘' : '·'}
                       </span>
@@ -1088,7 +1191,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="rounded-xl px-4 py-3.5" style={{ background: 'rgba(184,134,11,0.06)' }}>
+              <div className="rounded-xl px-4 py-3.5" style={{ background: 'rgba(43,93,94,0.06)' }}>
                 <div className="font-bold text-sm mb-1.5">AI Autopsy Agent {!agentResult.autopsy.llm_available && <span className="text-neutral-400 font-normal">(Groq key not configured — degraded)</span>}</div>
                 <div className="text-sm text-neutral-700 mb-1"><b>{agentResult.autopsy.failure_type}</b> — confidence {(agentResult.autopsy.confidence * 100).toFixed(0)}%</div>
                 <div className="text-sm text-neutral-600 mb-2">{agentResult.autopsy.root_cause}</div>
@@ -1101,8 +1204,8 @@ export default function Dashboard() {
                 <div className="font-bold text-sm mb-2">Feature discovery <span className="font-normal text-neutral-400">(pure pandas/numpy + RandomForest importance — no LLM)</span></div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {agentResult.discovery.candidates_tested.map(c => (
-                    <div key={c.feature} className="rounded-lg px-3 py-2 text-[13px]" style={{ background: c.accepted ? 'rgba(46,125,50,0.08)' : 'rgba(0,0,0,0.03)' }}>
-                      <div className="font-semibold">{c.feature} {c.accepted && <span style={{ color: '#2E7D32' }}>✓</span>}</div>
+                    <div key={c.feature} className="rounded-lg px-3 py-2 text-[13px]" style={{ background: c.accepted ? 'rgba(53,107,63,0.08)' : 'rgba(0,0,0,0.03)' }}>
+                      <div className="font-semibold">{c.feature} {c.accepted && <span style={{ color: '#356B3F' }}>✓</span>}</div>
                       <div className="text-neutral-500">importance {c.importance.toFixed(3)}</div>
                     </div>
                   ))}
@@ -1111,27 +1214,28 @@ export default function Dashboard() {
 
               <div>
                 <div className="font-bold text-sm mb-2">Candidate policies, ranked by readiness</div>
+                <p className="text-xs text-neutral-500 mb-3 italic">In plain terms: the score is a tie-breaker between candidates that already passed every gate — it never overrides a failed gate. "BLOCKED" means at least one gate failed, full stop, regardless of how high the score reads.</p>
                 <div className="space-y-2.5">
                   {agentResult.candidates.map((c, i) => (
                     <div key={i} className="rounded-xl border border-black/5 px-4 py-3.5">
                       <div className="flex items-center justify-between flex-wrap gap-2 mb-1.5">
                         <div className="font-semibold text-sm">{c.hypothesis.name} {!c.hypothesis.llm_generated && <span className="text-neutral-400 font-normal text-xs">(baseline)</span>}</div>
                         <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{
-                          background: c.failed ? 'rgba(0,0,0,0.06)' : c.readiness.status === 'APPROVAL_ELIGIBLE' ? 'rgba(46,125,50,0.1)' : 'rgba(178,58,72,0.1)',
-                          color: c.failed ? '#6b6b6b' : c.readiness.status === 'APPROVAL_ELIGIBLE' ? '#2E7D32' : '#B23A48',
+                          background: c.failed ? 'rgba(0,0,0,0.06)' : c.readiness.status === 'APPROVAL_ELIGIBLE' ? 'rgba(53,107,63,0.1)' : 'rgba(166,57,47,0.1)',
+                          color: c.failed ? '#6b6b6b' : c.readiness.status === 'APPROVAL_ELIGIBLE' ? '#356B3F' : '#A6392F',
                         }}>
                           {c.failed ? 'CRASHED' : c.readiness.status === 'APPROVAL_ELIGIBLE' ? `APPROVAL ELIGIBLE · ${c.readiness.overall_score}/100` : `BLOCKED · ${c.readiness.overall_score}/100`}
                         </span>
                       </div>
                       <div className="text-[13px] text-neutral-500 mb-1">{c.hypothesis.rationale} — features: {c.x_cols.join(', ')}</div>
                       {c.hypothesis.hypothesis_statement && (
-                        <div className="text-[12.5px] rounded-lg px-2.5 py-1.5 mb-2 italic" style={{ background: 'rgba(46,134,171,0.08)', color: '#2E86AB' }}>
+                        <div className="text-[12.5px] rounded-lg px-2.5 py-1.5 mb-2 italic" style={{ background: 'rgba(43,93,94,0.08)', color: '#2B5D5E' }}>
                           Testable claim: {c.hypothesis.hypothesis_statement}
                         </div>
                       )}
 
                       {c.failed || !c.verify ? (
-                        <div className="text-[13px]" style={{ color: '#B23A48' }}>{c.readiness.blocked_reasons[0]}</div>
+                        <div className="text-[13px]" style={{ color: '#A6392F' }}>{c.readiness.blocked_reasons[0]}</div>
                       ) : (
                         <>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
@@ -1143,7 +1247,7 @@ export default function Dashboard() {
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-1 mt-2 text-[12.5px]">
                             {c.readiness.gates.map(g => (
                               <div key={g.name} className="flex items-center gap-1.5">
-                                <span style={{ color: g.passed ? '#2E7D32' : '#B23A48' }}>{g.passed ? '✓' : '✕'}</span>
+                                <span style={{ color: g.passed ? '#356B3F' : '#A6392F' }}>{g.passed ? '✓' : '✕'}</span>
                                 <span className="text-neutral-600">{g.name}</span>
                               </div>
                             ))}
@@ -1156,11 +1260,12 @@ export default function Dashboard() {
               </div>
 
               {agentResult.final_status === 'POLICY_REGISTERED' && agentResult.registered_version ? (
-                <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
-                  <CheckCircle2 size={16} className="flex-none" /> Registered as <b>{agentResult.registered_version.label}</b> in Version History (section 4.9) — awaiting the same identity-verified human approval as every other version.
+                <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
+                  <CheckCircle2 size={16} className="flex-none mt-0.5" />
+                  <span className="min-w-0">Registered as <b>{agentResult.registered_version.label}</b> in Version History (section 4.9) — awaiting the same identity-verified human approval as every other version.</span>
                 </div>
               ) : (
-                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(178,58,72,0.08)', color: '#B23A48' }}>
+                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(166,57,47,0.08)', color: '#A6392F' }}>
                   <div className="font-bold mb-1 flex items-center gap-2"><TriangleAlert size={16} /> NO APPROVAL-ELIGIBLE POLICY</div>
                   <div className="text-neutral-700">No candidate this run passed every gate — nothing was registered. Do not deploy. This is the verifier constraining the system as designed, not a failure to produce output; the recommended next step is generating additional hypotheses or a human investigation, not lowering the bar.</div>
                 </div>
@@ -1179,7 +1284,7 @@ export default function Dashboard() {
               cost to a genuine customer. For every held-out customer, expected net value is computed per action and
               the optimizer picks the best one.
             </p>
-            <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(184,134,11,0.08)', color: '#8a6100' }}>
+            <div className="rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(43,93,94,0.08)', color: '#966A22' }}>
               {interventionOptimizer.separability_note}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
@@ -1202,9 +1307,10 @@ export default function Dashboard() {
               <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2">
                 Decision-boundary sweep (synthetic, at a representative loss of ₹{interventionOptimizer.decision_boundary_representative_loss_rs.toLocaleString()}) — proof the ladder genuinely grades
               </div>
+              <p className="text-xs text-neutral-500 mb-2 italic">In plain terms: "p≥0.02" means "once this customer's estimated abuse probability crosses 2%" — read left to right, each row is the next, harsher action the optimizer switches to as risk climbs.</p>
               <div className="flex flex-wrap gap-2">
                 {interventionOptimizer.decision_boundary_transitions.map((t, i) => (
-                  <span key={i} className="text-[12px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(46,134,171,0.1)', color: '#2E86AB' }}>
+                  <span key={i} className="text-[12px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(43,93,94,0.1)', color: '#2B5D5E' }}>
                     p≥{t.p_abuse.toFixed(2)} → {t.optimal_action}
                   </span>
                 ))}
@@ -1217,7 +1323,7 @@ export default function Dashboard() {
         {residualClusters && (
           <GlassCard id="sec-4-14">
             <SectionHead number="4.14" title="Residual behavior scan" subtitle="Experimental — an illustration of the capability, not a fraud-discovery claim." />
-            <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(184,134,11,0.12)', color: '#8a6100' }}>
+            <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-sm mb-4" style={{ background: 'rgba(43,93,94,0.12)', color: '#966A22' }}>
               <TriangleAlert size={16} className="flex-none mt-0.5" />
               <span>{residualClusters.disclaimer}</span>
             </div>
@@ -1253,6 +1359,7 @@ export default function Dashboard() {
               project's own tooling found to be near-perfectly separable. This section is the honest stress-test of
               that claim — one consolidated place rather than five more top-level sections.
             </p>
+            <p className="text-xs text-neutral-500 mb-5 italic">In plain terms, four different ways of asking "are you sure?": <b>difficulty tiers</b> — does it still work on harder, messier customers, not just easy ones; <b>secret holdout</b> — does it work on data it never got a chance to see while being built; <b>10-seed evaluation</b> — is the headline number a fluke of one lucky data split, or does it hold up across ten independent ones; <b>mutation testing</b> — if the policy itself were quietly broken, would this project's own checks actually notice.</p>
 
             {difficultyTiers && (
               <div className="mb-5">
@@ -1372,13 +1479,13 @@ export default function Dashboard() {
           </button>
           <p className="text-xs text-neutral-400 mt-2">Requires signing in and a live face match against the reviewer's enrolled identity, independently re-verified server-side.</p>
           {submitted && (
-            <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mt-4" style={{ background: 'rgba(46,125,50,0.08)', color: '#2E7D32' }}>
-              <CheckCircle2 size={16} className="flex-none" />
-              {submitted.label} approved by <b>{submitted.identity}</b> — biometrically verified.
+            <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-sm mt-4" style={{ background: 'rgba(53,107,63,0.08)', color: '#356B3F' }}>
+              <CheckCircle2 size={16} className="flex-none mt-0.5" />
+              <span className="min-w-0">{submitted.label} approved by <b>{submitted.identity}</b> — biometrically verified.</span>
             </div>
           )}
           {submitError && (
-            <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mt-4" style={{ background: 'rgba(178,58,72,0.08)', color: '#B23A48' }}>
+            <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm mt-4" style={{ background: 'rgba(166,57,47,0.08)', color: '#A6392F' }}>
               <TriangleAlert size={16} className="flex-none" /> {submitError}
             </div>
           )}
@@ -1413,7 +1520,33 @@ export default function Dashboard() {
       )}
         </div>
       </main>
-      <ChatWidget llmEnabled={llmEnabled} />
+      <ChatWidget
+        llmEnabled={llmEnabled}
+        speakByDefault={settings.speakByDefault}
+        commandsEnabled={settings.commandsEnabled}
+        voiceId={settings.voiceId}
+        commands={{
+          retrain: runRetrain,
+          runAutonomousEngineer,
+          scrollToSection: (id) => {
+            const el = document.getElementById(id)
+            if (!el) return false
+            const startY = window.scrollY
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            // Smooth scrolling is a compositor-driven animation that some
+            // environments (a backgrounded/throttled tab, reduced-motion
+            // setups) never actually run - if scroll position hasn't moved
+            // at all shortly after, force it there instantly instead of
+            // silently leaving the user stuck at the top of the page.
+            setTimeout(() => {
+              if (Math.abs(window.scrollY - startY) < 2) {
+                el.scrollIntoView({ behavior: 'instant', block: 'start' })
+              }
+            }, 400)
+            return true
+          },
+        }}
+      />
     </div>
   )
 }
@@ -1430,7 +1563,7 @@ function StatBox({ label, value, good }: { label: string; value: string; good?: 
   return (
     <div className="metric-tile px-4 py-3 text-center">
       <div className="text-[11px] uppercase tracking-wide text-neutral-500">{label}</div>
-      <div className={`text-xl font-extrabold mt-1 ${good ? 'text-[#2E7D32]' : ''}`}>{value}</div>
+      <div className={`text-xl font-extrabold mt-1 ${good ? 'text-[#356B3F]' : ''}`}>{value}</div>
     </div>
   )
 }

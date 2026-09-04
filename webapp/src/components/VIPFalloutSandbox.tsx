@@ -37,8 +37,8 @@ export default function VIPFalloutSandbox() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               
               {/* VIP 1 */}
-              <div className="bg-white border border-[#B23A48]/20 shadow-sm rounded-xl p-4 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-12 h-12 bg-[#B23A48]/5 rounded-bl-full z-0" />
+              <div className="bg-white border border-[#A6392F]/20 shadow-sm rounded-xl p-4 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-12 h-12 bg-[#A6392F]/5 rounded-bl-full z-0" />
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default function VIPFalloutSandbox() {
                         <div className="text-[10px] text-neutral-500 uppercase tracking-wide">Enterprise Tier • LTV: ₹4,500,000</div>
                       </div>
                     </div>
-                    <span className="text-[10px] text-[#B23A48] font-bold bg-[#B23A48]/10 px-2 py-1 rounded">HIGH RISK</span>
+                    <span className="text-[10px] text-[#A6392F] font-bold bg-[#A6392F]/10 px-2 py-1 rounded">HIGH RISK</span>
                   </div>
                   <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-100 font-serif text-sm text-neutral-700 italic">
                     "Our procurement team has been blocked from making our monthly hardware purchase. We spend ₹5L a month with you. Please unblock this immediately or we will switch payment gateways today."

@@ -18,13 +18,37 @@
 > ### TL;DR
 > A fraud model tells you "is this transaction fraud?" **Risk Autopsy answers a different question: "prove this new policy is safer and cheaper than the one running today — before it deploys."** It's built as a CI/CD system for risk policies: every candidate gets an 8-gate PR (historical regression, adversarial coverage, evasion distance, fairness, off-policy value, blast radius, economic ₹ value, complexity), and an **Autonomous Risk Policy Engineer** runs the full loss → autopsy → discover → attack → harden pipeline on its own, stopping only at human approval. Its best result: the system's own drift monitor found a real blind spot in a defense it had called "fully converged," and a remediation loop closed the gap and re-verified it — not just flagged it.
 >
-> 🎥 **Demo video:** _add link here before submitting_ · 🚀 **Live demo:** _add hosted link here before submitting_ · 📄 Full write-up below
+> 🎥 **Demo video:** _add link here before submitting_ · 🚀 **Live demo:** _add hosted link here before submitting_ · 📄 Full write-up below · 🏗️ [Architecture doc](docs/ARCHITECTURE.md)
 
 ---
 
-**Risk Autopsy explores a different problem than "will this transaction be fraud?": how can a merchant prove that a new risk policy is safer and more economical than the one it would replace — before that policy ever touches production?**
+## 1. Loss category: chargeback / return abuse rings
 
-That's the actual thesis here, and it's why this project is built as **a CI/CD system for financial-risk policies**, not a fraud classifier with extra features bolted on. Every policy change here gets a pull request: a regression suite against every historical loss, an adversarial test, a robustness check (how small a behavioral change would defeat it), an economic-value check in real ₹, a blast-radius diff, a fairness check — and only then a human merge:
+**Risk Autopsy targets one loss category — coordinated chargeback and return abuse — and builds a detector, verifier, and responder around it end-to-end.** The modeled pattern (`src/generate_data.py`, typology documented there): a low-value purchase, a wait, an escalation to a high-value purchase, then a return or chargeback, coordinated across a device- or address-sharing ring. Not a generic "is this transaction fraud" classifier — a policy pipeline scoped to this one loss category, matching the brief's ask directly (see [Data honesty](#data-honesty) for exactly what's synthetic).
+
+## 2. Honest precision / recall / false-positive cost
+
+| Policy | Precision | Recall | False positives |
+|---|---|---|---|
+| Baseline (`amount > ₹25,000`) | 32.9% | 58.3% | 57 |
+| Discovered v1 (behavioral, leakage-free) | 90.6% | 100.0% | 5 |
+| Hardened v2 (adversarially retrained) | 100.0% | 100.0% | 0 |
+
+v1's 90.6% — 5 real false positives, not a suspiciously clean 100% — is intentional: an earlier "100%/100%, 0 FP" result was treated as a red flag for data leakage, not a win (`docs/ENGINEERING_LOG.md`). v2's 100%/100%/0 is real, but on a headline population that's near-perfectly separable by construction — disclosed everywhere it appears, not just here. To see whether that number survives harder conditions, the frozen v2 policy is also scored against an unseen seed (**98.4% precision, 100% recall, 3 FP** — [Secret holdout](#evaluation-rigor)), against 10 independent seeds (**98.2% ± 1.8% precision** — [10-seed eval](#evaluation-rigor)), and against deliberately harder-by-construction populations (**74.7–80.8% precision** on ambiguous/adversarial tiers — [Difficulty tiers](#evaluation-rigor)). The honesty is the point: every number above is the real number, softest case and hardest case both shown, not just the best one.
+
+## 3. Defense-only, by design
+
+Every action this system can take is one of five: **ALLOW, STEP_UP (verification), DELAY, MANUAL_REVIEW, BLOCK** (`src/intervention_optimizer.py`) — no autonomous fund movement, no punitive customer action taken without a human approval gate. That's enforced structurally, not just described:
+
+> **The LLM proposes. ML and statistics verify. The verification suite gatekeeps. The LLM never computes a metric, never picks a numeric threshold, and never cites a feature that doesn't already exist in the real data.**
+
+Concretely: every threshold in every policy version was fit by `scikit-learn` on real data, never specified by an LLM; a candidate is only registered as deployable when it clears every gate in the verifier (`run_autonomous_engineer` only calls the registration step when `readiness.status == APPROVAL_ELIGIBLE`); and deployment itself is impossible without a human — `register_external_policy` never sets `approved_by`, only `POST /api/policy/approve` does, and that endpoint requires a short-lived signed token minted after the backend independently re-verifies the reviewer's identity server-side. No step between a confirmed loss and a live policy change can complete without a human clicking approve.
+
+---
+
+## Supporting evidence — why the three numbers above hold up
+
+Everything from here down isn't required to answer the brief above — loss category, honest metrics, defense-only guardrail are already stated. What follows is the proof that backs those three claims: adversarial robustness (does it survive an attacker), drift monitoring (does it keep working after deployment), off-policy evaluation (can you trust the number before deploying), fairness, and the autonomous policy engineer that runs the whole pipeline unattended. This is also where the full 8-gate "Policy PR" example lives — the same gate checklist every version in this project's history carries, computed by `backend/agent.py::compute_gates_for_tree` from a real `retrain()` call, not a mockup:
 
 ```
 POLICY PR — v(candidate) vs. v(currently deployed)
@@ -46,9 +70,7 @@ POLICY PR — v(candidate) vs. v(currently deployed)
 Status: ❌ BLOCKED — 4 of 8 gates failed, nothing registered
 ```
 
-This is a **real, live-generated** transcript (`backend/agent.py::compute_gates_for_tree`, invoked here via a real `retrain()` call) — not a mockup written for the pitch. Every version in this project's Policy Version History (section 4.9 of the dashboard) carries the same 8-gate checklist, computed the same way, whether it came from a manual retrain, a re-run adversarial arms race, or the autonomous engineer below. Gates decide eligibility; nothing about a candidate's provenance does.
-
-The lifecycle this pull request sits inside — loss → autopsy → decision-path attribution → discover → attack → harden → the gate checklist above → human approval → deploy → drift → remediate → back to autopsy — is diagrammed in [Core risk-policy lifecycle](#core-risk-policy-lifecycle) below, and **an Autonomous Risk Policy Engineer** runs the whole thing without a human orchestrating every step, stopping only at the approval boundary:
+Read as deep as you need to trust the headline; none of it changes the three answers above. The lifecycle this pull request sits inside — loss → autopsy → decision-path attribution → discover → attack → harden → the gate checklist above → human approval → deploy → drift → remediate → back to autopsy — is diagrammed in [Core risk-policy lifecycle](#core-risk-policy-lifecycle) below, and **an Autonomous Risk Policy Engineer** runs the whole thing without a human orchestrating every step, stopping only at the approval boundary:
 
 ![Autonomous Risk Policy Engineer](docs/screenshots/12-autonomous-engineer-autopsy.jpg)
 
@@ -434,11 +456,11 @@ flowchart TD
     BE --> ML["ML / policy pipeline<br/>(src/*.py, offline)"]
     ML --> EV["Evaluation + adversarial testing<br/>held-out · off-policy · co-evolution · drift"]
     EV --> GOV["Policy history / governance<br/>version timeline · blast radius · dossier"]
-    GOV --> AI["AI assistance<br/>Groq: case notes, chat, letters, column mapping"]
+    GOV --> AI["AI assistance<br/>Groq: case notes, chat, letters, column mapping, chat commands"]
     BE --> ID["Supabase identity / workspace layer<br/>auth, biometric enrollment, multi-tenant data"]
 ```
 
-The ML pipeline runs offline and writes its results to `data/`; the backend serves those results live over HTTP (autopsy reconstruction is computed fresh per request, policy metrics are read from the artifacts the pipeline already produced — the standard train-offline/serve-online pattern). The frontend is a real React app. `_legacy_superseded/` holds two earlier working iterations kept for history — not what to run or demo. Full file-level structure is at the bottom of this document.
+The ML pipeline runs offline and writes its results to `data/`; the backend serves those results live over HTTP (autopsy reconstruction is computed fresh per request, policy metrics are read from the artifacts the pipeline already produced — the standard train-offline/serve-online pattern). We deliberately chose shallow decision trees over complex ensembles so a human approver can actually read the rule, and built an offline pipeline rather than streaming infra because this is a hackathon prototype, not production. The frontend is a real React app. `_legacy_superseded/` holds two earlier working iterations kept for history — not what to run or demo. Full file-level structure is at the bottom of this document.
 
 ---
 
@@ -501,7 +523,9 @@ GET  /api/dossier                          the compliance PDF, assembled from ev
 
 ## AI usage — honestly scoped
 
-Groq (`openai/gpt-oss-120b`) is used for exactly four things, each grounded in real computed pipeline output, never asked to invent numbers: writing a case-note narrative from real autopsy data, answering reviewer questions grounded in the live dashboard's actual data, drafting the internal and customer-facing blast-radius notes, and mapping an arbitrary uploaded CSV's columns onto the pipeline's schema. None of these are the project's core innovation — the policy-engineering pipeline is. Without a Groq key, all four degrade gracefully with a clear inline message; everything else on the dashboard works regardless.
+Groq (`openai/gpt-oss-120b`) is used for five things, each grounded in real computed pipeline output, never asked to invent numbers: writing a case-note narrative from real autopsy data, answering reviewer questions grounded in the live dashboard's actual data, drafting the internal and customer-facing blast-radius notes, mapping an arbitrary uploaded CSV's columns onto the pipeline's schema, and classifying a chat command (typed or voice) into one of a fixed set of safe actions. None of these are the project's core innovation — the policy-engineering pipeline is. Without a Groq key, all five degrade gracefully with a clear inline message; everything else on the dashboard works regardless.
+
+The fifth one is worth being precise about, since it's the only case where an LLM output has a real side effect rather than just generating text: the chat widget can trigger **retrain a candidate** or **run the autonomous engineer** on command — both already-safe, reversible, non-deploying pipeline stages that produce nothing but a new `PROPOSED` version, exactly like clicking the equivalent button. This doesn't weaken "the LLM proposes, code verifies, nothing auto-approves" — it's still true: `scikit-learn` still fits every threshold, the verifier gates still decide eligibility, and no version can reach `approved_by` without the same identity-verified human. The classifier's output type has no `approve`/`deploy`/`activate` value in it at all — not a prompt instruction telling it not to pick one, an option that structurally doesn't exist — so there's no phrasing that talks it into one. See `backend/llm.py::classify_command_intent` and `webapp/src/components/ChatWidget.tsx`.
 
 ## Production & governance layer
 
@@ -511,7 +535,7 @@ These exist to show the core policy-engineering system can become a usable risk-
 - **Compliance PDF dossier** — every stage's real computed output (held-out metrics, adversarial log, co-evolution result, off-policy evaluation, portfolio conflict, blast radius, approval record) assembled into one exportable artifact.
 - **Policy version history** — real retraining on the same held-out split as v1, not a relabeled copy, with a full approval timeline.
 - **Multi-tenant merchant workspaces** — upload any transactions CSV; an LLM maps its columns onto the pipeline's schema, and the analysis persists as a revisitable workspace.
-- **Grounded chat and AI case notes** for reviewer-facing explanation.
+- **Grounded chat and AI case notes** for reviewer-facing explanation, with optional voice input/output and a small set of safe chat commands (navigate, retrain, run the autonomous engineer) — never approve/deploy, see [AI usage](#ai-usage--honestly-scoped) above for exactly why that boundary holds.
 
 ---
 
@@ -582,7 +606,7 @@ curl -X POST http://localhost:8010/api/agent/run
 
 Or click "Run autonomous engineer" in section 4.12 of the dashboard. Rate-limited to 5 runs/hour (each run does real ML work plus 2 LLM calls). A real run's output — including the winning candidate, registered as v5 — is already committed in this repo; running it again will produce a **different** set of LLM-proposed hypotheses (temperature 0.4, not deterministic) evaluated against the same real verifier.
 
-**Optional: AI features** (case notes, chat, letters, CSV column mapping) — without this, those features degrade gracefully with a clear inline message; everything else works regardless:
+**Optional: AI features** (case notes, chat, letters, CSV column mapping, chat commands) — without this, those features degrade gracefully with a clear inline message; everything else works regardless:
 
 ```bash
 cp backend/.env.example backend/.env
@@ -658,7 +682,7 @@ Razor/
 │   ├── agent.py                # the Autonomous Risk Policy Engineer: autopsy, feature discovery, hypothesis synthesis, attack/harden, verifier (8 gates), readiness score
 │   ├── causal_graph.py         # per-customer decision-path attribution - the exact split sequence a tree took, live-computed, scoped explicitly to "this model's decision"
 │   ├── auth.py                 # server-side approval verification: real Supabase identity + face-match re-check, signed short-lived tokens
-│   ├── llm.py                  # Groq integration: case notes, grounded chat, letters, CSV column mapping
+│   ├── llm.py                  # Groq integration: case notes, grounded chat, letters, CSV column mapping, chat-command classification
 │   ├── dataset.py              # unsupervised ring-signal analysis + multi-tenant workspace persistence
 │   ├── policy_history.py       # real policy retraining + version timeline, every version carries the same 8-gate "Policy PR" checklist
 │   ├── dossier.py              # compliance PDF export (ReportLab)

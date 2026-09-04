@@ -14,12 +14,13 @@ Run with: uvicorn backend.main:app --reload --port 8000
 """
 from fastapi import FastAPI, HTTPException, UploadFile, File, Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import Response, StreamingResponse
 from pydantic import BaseModel
 import pandas as pd
 import json
 import os
 import io
+import edge_tts
 
 from . import llm
 from . import dataset as dataset_mod
@@ -154,8 +155,14 @@ def blast_radius():
     try:
         data["worth_reviewing"] = llm.annotate_blast_radius(data["worth_reviewing"])
         data["llm_annotated"] = True
-    except Exception:
+    except Exception as e:
+        # Distinguish "no key set" from a live call that failed for some
+        # other reason (rate limit, network) - the frontend was blaming
+        # "not configured" for every failure, which is wrong most of the
+        # time in practice (e.g. Groq's daily token quota running out).
         data["llm_annotated"] = False
+        data["llm_configured"] = bool(os.environ.get("GROQ_API_KEY"))
+        data["llm_error"] = str(e)
     return data
 
 
@@ -459,7 +466,15 @@ def dossier(approved_by: str | None = None):
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "llm_enabled": bool(os.environ.get("GROQ_API_KEY"))}
+    # Reports configuration status only - never the key values themselves.
+    # Real credentials stay server-side in backend/.env; the Settings panel
+    # on the frontend uses this to tell a reviewer what's on/off, not to
+    # collect or display secrets through the browser.
+    return {
+        "status": "ok",
+        "llm_enabled": bool(os.environ.get("GROQ_API_KEY")),
+        "supabase_configured": bool(os.environ.get("SUPABASE_SERVICE_ROLE_KEY")),
+    }
 
 
 @app.get("/api/autopsy/{customer_id}/narrative")
@@ -508,6 +523,63 @@ def chat(req: ChatRequest):
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e))
     return {"answer": answer}
+
+
+class CommandIntentRequest(BaseModel):
+    text: str
+
+
+@app.post("/api/command-intent")
+def command_intent(req: CommandIntentRequest):
+    """Smarter fallback for the chat widget's command layer: classifies free
+    text (typed or voice-transcribed) into navigate/retrain/run_agent/chat
+    when the frontend's client-side keyword matcher doesn't recognize the
+    phrasing. The intent enum has no 'approve'/'deploy' member - see
+    llm.classify_command_intent's docstring for why that's a structural
+    boundary, not a prompt instruction alone."""
+    try:
+        return llm.classify_command_intent(req.text)
+    except RuntimeError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
+
+_tts_calls: collections.deque = collections.deque()
+_TTS_LIMIT = 40
+_TTS_WINDOW_S = 3600  # generous - it's a chat reply being read aloud, not a hot loop, but this hits an unofficial external endpoint so isn't left unbounded
+
+
+class TTSRequest(BaseModel):
+    text: str
+    voice: str = "en-US-AriaNeural"  # a free Microsoft neural voice - realistic, no API key, same voices Edge's "Read Aloud" uses
+
+
+@app.post("/api/tts")
+async def text_to_speech(req: TTSRequest):
+    """Realistic, free text-to-speech via edge-tts - the same neural voices
+    Microsoft Edge's Read Aloud feature uses, reverse-engineered as a
+    well-known open-source library. No API key and no per-character cost,
+    unlike ElevenLabs/Azure/Google's paid TTS APIs - the tradeoff is that
+    it's unofficial, so it isn't guaranteed stable long-term. The frontend
+    falls back to the browser's own built-in speech synthesis if this
+    endpoint errors."""
+    now = _time.monotonic()
+    while _tts_calls and now - _tts_calls[0] > _TTS_WINDOW_S:
+        _tts_calls.popleft()
+    if len(_tts_calls) >= _TTS_LIMIT:
+        raise HTTPException(status_code=429, detail="too many voice replies this hour - slow down")
+    _tts_calls.append(now)
+
+    text = req.text.strip()[:2000]
+    if not text:
+        raise HTTPException(status_code=400, detail="empty text")
+
+    async def audio_stream():
+        communicate = edge_tts.Communicate(text, req.voice)
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                yield chunk["data"]
+
+    return StreamingResponse(audio_stream(), media_type="audio/mpeg")
 
 
 @app.post("/api/dataset/upload")

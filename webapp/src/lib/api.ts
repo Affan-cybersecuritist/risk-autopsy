@@ -151,6 +151,8 @@ export interface BlastRadiusResults {
   worth_reviewing_count: number
   worth_reviewing: BlastRadiusRow[]
   llm_annotated: boolean
+  llm_configured?: boolean
+  llm_error?: string
 }
 
 export interface DriftMonthEntry {
@@ -406,6 +408,7 @@ export interface CausalGraphResult {
 export interface HealthResult {
   status: string
   llm_enabled: boolean
+  supabase_configured: boolean
 }
 
 export interface DifficultyTierRow {
@@ -568,6 +571,8 @@ export const api = {
   health: () => get<HealthResult>('/api/health'),
   narrative: (customerId: number) => get<{ customer_id: number; narrative: string }>(`/api/autopsy/${customerId}/narrative`),
   chat: (question: string, history: ChatMessage[]) => post<{ answer: string }>('/api/chat', { question, history }),
+  commandIntent: (text: string) => post<{ intent: 'navigate' | 'retrain' | 'run_agent' | 'chat'; section_id: string | null }>('/api/command-intent', { text }),
+  ttsUrl: () => `${API_BASE}/api/tts`,
   dossierUrl: (approvedBy?: string) => `${API_BASE}/api/dossier${approvedBy ? `?approved_by=${encodeURIComponent(approvedBy)}` : ''}`,
   policyHistory: () => get<{ history: PolicyHistoryEntry[] }>('/api/policy/history'),
   retrainPolicy: (maxDepth: number, minSamplesLeaf: number) =>

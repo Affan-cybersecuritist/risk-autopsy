@@ -1,15 +1,15 @@
 export default function SectionHead({ number, title, subtitle }: { number: string | number; title: string; subtitle?: string }) {
   return (
-    <div className="flex items-center gap-4 mb-5">
+    <div className="flex items-baseline gap-3 mb-5">
       <div
-        className="flex-none w-11 h-11 rounded-[13px] flex items-center justify-center text-white font-extrabold text-[17px]"
-        style={{ background: 'linear-gradient(135deg,#D4AF37,#B8860B)', boxShadow: '0 10px 22px rgba(184,134,11,0.35)' }}
+        className="flex-none w-6 h-6 rounded-[6px] flex items-center justify-center text-white text-[12px] font-mono"
+        style={{ background: '#2B5D5E' }}
       >
         {number}
       </div>
       <div>
-        <div className="text-2xl font-extrabold leading-tight">{title}</div>
-        {subtitle && <div className="text-[13.5px] text-neutral-500 mt-0.5">{subtitle}</div>}
+        <div className="text-[21px] font-semibold leading-tight" style={{ fontFamily: "'Fraunces', serif" }}>{title}</div>
+        {subtitle && <div className="text-[13px] mt-1" style={{ color: '#5C7370' }}>{subtitle}</div>}
       </div>
     </div>
   )

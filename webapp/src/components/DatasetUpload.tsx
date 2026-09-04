@@ -18,6 +18,17 @@ export default function DatasetUpload({ llmEnabled }: { llmEnabled: boolean }) {
 
   useEffect(refreshTenants, [])
 
+  // DatasetUpload itself doesn't unmount when the tenant-viewer modal closes
+  // (viewingTenant just goes back to null), so this has to key off that
+  // rather than assume a fresh mount - same body-scroll-lock reasoning as
+  // the other modals in this app.
+  useEffect(() => {
+    if (!viewingTenant) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [viewingTenant])
+
   async function handleFile(file: File) {
     setBusy(true)
     setError(null)
@@ -48,7 +59,7 @@ export default function DatasetUpload({ llmEnabled }: { llmEnabled: boolean }) {
     <div>
       <div
         onClick={() => inputRef.current?.click()}
-        className="border-2 border-dashed border-black/10 rounded-2xl p-6 text-center cursor-pointer hover:border-[#B8860B]/40 hover:bg-[#B8860B]/[0.03] transition-colors"
+        className="border-2 border-dashed border-black/10 rounded-2xl p-6 text-center cursor-pointer hover:border-[#2B5D5E]/40 hover:bg-[#2B5D5E]/[0.03] transition-colors"
       >
         <input
           ref={inputRef}
@@ -69,7 +80,7 @@ export default function DatasetUpload({ llmEnabled }: { llmEnabled: boolean }) {
       </div>
 
       {error && (
-        <div className="text-[13px] text-[#B23A48] bg-[#B23A48]/8 rounded-lg px-3 py-2 mt-3">
+        <div className="text-[13px] text-[#A6392F] bg-[#A6392F]/8 rounded-lg px-3 py-2 mt-3">
           {llmEnabled ? error : 'Groq API key not configured on the backend yet — set GROQ_API_KEY in backend/.env to enable column mapping.'}
         </div>
       )}
@@ -91,7 +102,7 @@ export default function DatasetUpload({ llmEnabled }: { llmEnabled: boolean }) {
               <button
                 key={t.id}
                 onClick={() => openTenant(t.id)}
-                className="w-full flex items-center justify-between gap-3 rounded-xl border border-black/5 px-4 py-3 text-left hover:border-[#B8860B]/30 hover:bg-[#B8860B]/[0.03] transition-colors"
+                className="w-full flex items-center justify-between gap-3 rounded-xl border border-black/5 px-4 py-3 text-left hover:border-[#2B5D5E]/30 hover:bg-[#2B5D5E]/[0.03] transition-colors"
               >
                 <div className="min-w-0">
                   <div className="font-semibold text-sm truncate">{t.name}</div>
@@ -99,7 +110,7 @@ export default function DatasetUpload({ llmEnabled }: { llmEnabled: boolean }) {
                     {t.total_customers} customers · ₹{Math.round(t.total_chargeback_loss).toLocaleString()} loss · {t.flagged_customer_count} flagged
                   </div>
                 </div>
-                <span onClick={(e) => removeTenant(t.id, e)} className="flex-none p-1.5 rounded-lg text-neutral-300 hover:text-[#B23A48] hover:bg-[#B23A48]/8">
+                <span onClick={(e) => removeTenant(t.id, e)} className="flex-none p-1.5 rounded-lg text-neutral-300 hover:text-[#A6392F] hover:bg-[#A6392F]/8">
                   <Trash2 size={14} />
                 </span>
               </button>
@@ -110,7 +121,11 @@ export default function DatasetUpload({ llmEnabled }: { llmEnabled: boolean }) {
 
       {viewingTenant && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6" style={{ background: 'rgba(20,17,10,0.45)' }} onClick={() => setViewingTenant(null)}>
-          <div className="glass-card w-[560px] max-w-[92vw] max-h-[80vh] overflow-y-auto p-7 relative" style={{ background: 'rgba(255,255,255,0.97)' }} onClick={e => e.stopPropagation()}>
+          {/* .glass-card's plain-CSS `overflow: hidden` beats the Tailwind
+              `overflow-y-auto` utility regardless of class order (Tailwind
+              v4's utilities sit in a lower-priority @layer) - only an
+              inline style reliably wins that cascade. */}
+          <div className="glass-card w-[560px] max-w-[92vw] max-h-[80vh] p-7 relative" style={{ background: 'rgba(255,255,255,0.97)', overflowY: 'auto', overscrollBehavior: 'contain' }} onClick={e => e.stopPropagation()}>
             <button onClick={() => setViewingTenant(null)} className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-700"><X size={18} /></button>
             <div className="font-bold text-lg mb-4">{viewingTenant.name}</div>
             <AnalysisPanel result={viewingTenant} title="" />
