@@ -18,7 +18,7 @@
 > ### TL;DR
 > A fraud model tells you "is this transaction fraud?" **Risk Autopsy answers a different question: "prove this new policy is safer and cheaper than the one running today — before it deploys."** It's built as a CI/CD system for risk policies: every candidate gets an 8-gate PR (historical regression, adversarial coverage, evasion distance, fairness, off-policy value, blast radius, economic ₹ value, complexity), and an **Autonomous Risk Policy Engineer** runs the full loss → autopsy → discover → attack → harden pipeline on its own, stopping only at human approval. Its best result: the system's own drift monitor found a real blind spot in a defense it had called "fully converged," and a remediation loop closed the gap and re-verified it — not just flagged it.
 >
-> 🎥 **Demo video:** _add link here before submitting_ · 🚀 **Live demo:** _add hosted link here before submitting_ · 📄 Full write-up below · 🏗️ [Architecture doc](docs/ARCHITECTURE.md)
+> 🎥 **Demo video:** _add link here before submitting_ · 🚀 **Live demo:** [risk-autopsy.onrender.com](https://risk-autopsy.onrender.com) (free tier — first load after idle can take ~30-60s to wake up) · 📄 Full write-up below · 🏗️ [Architecture doc](docs/ARCHITECTURE.md)
 
 ---
 
@@ -562,7 +562,7 @@ All data is **synthetic**, generated in `src/generate_data.py`, modeled on a doc
 
 ## How to run
 
-**Live demo:** _add your deployed URL here_ — see [Deploying](#deploying) below for a one-click Render Blueprint that ships this as a single free service.
+**Live demo:** [risk-autopsy.onrender.com](https://risk-autopsy.onrender.com) — deployed via the one-click Render Blueprint described in [Deploying](#deploying) below. It's on Render's free tier, so it spins down after 15 minutes idle; the first request after that takes ~30-60s to wake back up.
 
 **Works immediately after clone** — `data/` already has committed pipeline outputs, so the dashboard works without regenerating anything:
 
@@ -572,7 +572,7 @@ uvicorn backend.main:app --port 8010          # terminal 1
 cd webapp && npm install && npm run dev        # terminal 2
 ```
 
-Open `http://localhost:5173`. The dashboard is public — no login required to browse it.
+Open `http://localhost:5173` — that's the public landing page, no login required. The risk console itself (`/console`) requires a signed-in, face-enrolled reviewer account; sign up from there.
 
 **Optional: regenerate the ML pipeline** (only needed if you want fresh numbers, not to run the app):
 
