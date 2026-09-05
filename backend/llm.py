@@ -89,6 +89,9 @@ DATA below - it is the real, currently-computed output of the pipeline. If
 something isn't in the data, say so instead of guessing. Keep answers short
 (2-4 sentences) and concrete - cite actual numbers.
 
+All currency amounts in the data are in Indian Rupees - always use the ₹ symbol 
+(e.g. "₹14.6M" or "₹14,63,002"), never $ or USD, and never claim the data is in dollars.
+
 DASHBOARD DATA:
 {json.dumps(context, indent=2)[:6000]}
 """
