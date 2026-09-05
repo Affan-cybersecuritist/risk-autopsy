@@ -415,20 +415,19 @@ def policy_retrain(req: RetrainRequest):
 
 class ApprovalTokenRequest(BaseModel):
     access_token: str
-    face_descriptor: list[float]
 
 
 @app.post("/api/policy/approval-token")
 def policy_approval_token(req: ApprovalTokenRequest):
     """Real server-side identity check: verifies the Supabase session
-    belongs to a real signed-in user, re-fetches that user's enrolled face
-    descriptor from Supabase, and re-computes the face match in this
-    process (not trusting the browser's own "it matched" claim). Only on a
-    genuine match does it mint a short-lived signed token. This is what
-    /api/policy/approve now actually requires - closing the gap where the
-    approval flow was previously enforced only in the React UI."""
+    belongs to a real signed-in user (re-checked against Supabase itself,
+    not trusted from the client) before minting a short-lived signed
+    token. Face-ID was dropped from this step - it now lives only on the
+    login page - so this is a session check, not a biometric one. This is
+    what /api/policy/approve now actually requires - closing the gap where
+    the approval flow was previously enforced only in the React UI."""
     try:
-        result = auth_mod.verify_face_and_mint_token(req.access_token, req.face_descriptor)
+        result = auth_mod.verify_session_and_mint_token(req.access_token)
     except auth_mod.AuthError as e:
         raise HTTPException(status_code=401, detail=str(e))
     return result
@@ -473,7 +472,6 @@ def health():
     return {
         "status": "ok",
         "llm_enabled": bool(os.environ.get("GROQ_API_KEY")),
-        "supabase_configured": bool(os.environ.get("SUPABASE_SERVICE_ROLE_KEY")),
     }
 
 

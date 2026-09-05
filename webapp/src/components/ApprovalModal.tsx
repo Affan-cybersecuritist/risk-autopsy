@@ -1,30 +1,21 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type * as FaceApi from 'face-api.js'
-import { X, ShieldCheck, Check } from 'lucide-react'
+import { X, ShieldCheck, Check, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { api } from '../lib/api'
 
-type Step = 'login' | 'face' | 'done'
-const MODEL_URL = '/models'
-const MATCH_THRESHOLD = 0.6
+// Face-ID stays only on the login page now (see Login.tsx) - approving a
+// policy just needs a fresh, server-verified Supabase session, checked
+// independently in backend/auth.py rather than trusted from the client.
+type Step = 'login' | 'done'
 
 export default function ApprovalModal({ onClose, onApproved }: { onClose: () => void; onApproved: (approvalToken: string, identity: string) => void }) {
   const [step, setStep] = useState<Step>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [msg, setMsg] = useState<{ text: string; type: 'error' | 'ok' } | null>(null)
-  const [userId, setUserId] = useState<string | null>(null)
-  const [ringState, setRingState] = useState<'scanning' | 'match' | 'nomatch'>('scanning')
-  const [faceStep, setFaceStep] = useState('Loading face models…')
   const [busy, setBusy] = useState(false)
-
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const streamRef = useRef<MediaStream | null>(null)
-  const faceapiRef = useRef<typeof FaceApi | null>(null)
-
-  useEffect(() => () => streamRef.current?.getTracks().forEach(t => t.stop()), [])
 
   // Mounts/unmounts with the modal (parent conditionally renders it) - locks
   // the page behind so a scroll gesture aimed at this modal can't leak
@@ -35,100 +26,32 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
     return () => { document.body.style.overflow = previousOverflow }
   }, [])
 
-  async function handleLogin() {
+  async function handleApprove() {
     setMsg(null)
     if (!email || !password) { setMsg({ text: 'Enter your email and password.', type: 'error' }); return }
     setBusy(true)
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    setBusy(false)
-    if (error) { setMsg({ text: error.message, type: 'error' }); return }
-    setUserId(data.user.id)
-    setStep('face')
-    setFaceStep('Loading face models…')
+    if (error) { setMsg({ text: error.message, type: 'error' }); setBusy(false); return }
 
-    const faceapi = await import('face-api.js')
-    faceapiRef.current = faceapi
-    await Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-      faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-    ])
-    setFaceStep('Requesting camera access — click "Allow" in your browser…')
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 480, height: 360 } })
-      streamRef.current = stream
-      if (videoRef.current) videoRef.current.srcObject = stream
-      setFaceStep('Position your face in frame to confirm this approval')
-    } catch (err) {
-      setMsg({ text: `Camera access denied: ${(err as Error).message}`, type: 'error' })
-    }
-  }
-
-  async function handleVerify() {
-    if (!videoRef.current || !userId || !faceapiRef.current) return
-    const faceapi = faceapiRef.current
-    setBusy(true)
-    setFaceStep('Verifying…')
-    const detection = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-      .withFaceLandmarks().withFaceDescriptor()
-
-    if (!detection) {
-      setMsg({ text: 'No face detected. Make sure you\'re well-lit and centered, then try again.', type: 'error' })
-      setFaceStep('Position your face in frame to confirm this approval')
-      setBusy(false)
-      return
-    }
-
-    const { data, error } = await supabase.from('profiles').select('face_descriptor').eq('id', userId).single()
-    if (error || !data?.face_descriptor) {
-      setMsg({ text: 'No enrolled face found for this account.', type: 'error' })
-      setBusy(false)
-      return
-    }
-    // Client-side check first, purely for instant visual feedback (the ring
-    // color, the "no match, try again" prompt) - it is NOT what authorizes
-    // the approval. The backend independently re-fetches the enrolled
-    // descriptor and re-computes this same comparison itself; only its
-    // verdict can mint an approval token. See backend/auth.py.
-    const distance = faceapi.euclideanDistance(Array.from(detection.descriptor), new Float32Array(data.face_descriptor))
-    if (distance >= MATCH_THRESHOLD) {
-      setRingState('nomatch')
-      setMsg({ text: `Face does not match this account (distance ${distance.toFixed(3)}). Try again.`, type: 'error' })
-      setBusy(false)
-      setTimeout(() => setRingState('scanning'), 1200)
-      return
-    }
-
-    setFaceStep('Confirming with server…')
     const { data: sessionData } = await supabase.auth.getSession()
     const accessToken = sessionData.session?.access_token
     if (!accessToken) {
-      setMsg({ text: 'Session expired - please sign in again.', type: 'error' })
+      setMsg({ text: 'Session expired - please try again.', type: 'error' })
       setBusy(false)
       return
     }
 
     try {
-      const result = await api.getApprovalToken(accessToken, Array.from(detection.descriptor))
-      setRingState('match')
-      streamRef.current?.getTracks().forEach(t => t.stop())
-      setTimeout(() => {
-        setStep('done')
-        onApproved(result.token, result.email)
-      }, 500)
+      const result = await api.getApprovalToken(accessToken)
+      setStep('done')
+      onApproved(result.token, result.email)
     } catch (err) {
-      // The server independently re-checked the face match and disagreed
-      // with (or couldn't reproduce) the client-side result - this is the
-      // real gate, so a server rejection wins even if the browser thought
-      // it matched.
-      setRingState('nomatch')
+      // The server independently re-checks the session against Supabase -
+      // this is the real gate, not the browser's own sign-in call.
       setMsg({ text: `Server could not verify identity: ${(err as Error).message}`, type: 'error' })
       setBusy(false)
-      setTimeout(() => setRingState('scanning'), 1200)
     }
   }
-
-  const ringClass = { scanning: 'border-[#2B5D5E]', match: 'border-[#356B3F]', nomatch: 'border-[#A6392F]' }[ringState]
 
   return (
     <AnimatePresence>
@@ -154,22 +77,10 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
               <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@razorpay.com" className="input mb-3" />
               <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wide block mb-1.5">Password</label>
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className="input mb-4" />
-              <button onClick={handleLogin} disabled={busy} className="gold-btn w-full py-3 rounded-xl mb-3">
-                {busy ? 'Signing in…' : 'Continue to face verification'}
+              <button onClick={handleApprove} disabled={busy} className="gold-btn w-full py-3 rounded-xl mb-3 flex items-center justify-center gap-2">
+                {busy && <Loader2 size={16} className="animate-spin" />} {busy ? 'Verifying…' : 'Verify & approve'}
               </button>
               <p className="text-xs text-center text-neutral-400">No reviewer account yet? <Link to="/account" className="text-[#2B5D5E] font-semibold">Create one</Link></p>
-            </>
-          )}
-
-          {step === 'face' && (
-            <>
-              <div className={`relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black mb-4 border-[3px] transition-colors ${ringClass}`}>
-                <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover -scale-x-100" />
-              </div>
-              <div className="text-center text-xs text-neutral-400 mb-3">{faceStep}</div>
-              <button onClick={handleVerify} disabled={busy} className="gold-btn w-full py-3 rounded-xl">
-                {busy ? 'Verifying…' : 'Capture & approve'}
-              </button>
             </>
           )}
 

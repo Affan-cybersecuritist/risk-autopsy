@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Microscope, ChevronDown, Settings, BookOpen } from 'lucide-react'
+import { Microscope, ChevronDown, Settings, BookOpen, LogOut } from 'lucide-react'
 
 // The primary spine: what a judge skimming for 90 seconds needs to see.
 // Everything else is real, load-bearing evidence for these claims - not
@@ -30,7 +30,13 @@ const DEEP_SECTIONS = [
 
 const SECTIONS = [...PRIMARY_SECTIONS, ...DEEP_SECTIONS]
 
-export default function Sidebar({ apiOnline, onOpenSettings, onOpenGlossary }: { apiOnline: boolean; onOpenSettings: () => void; onOpenGlossary: () => void }) {
+export default function Sidebar({ apiOnline, onOpenSettings, onOpenGlossary, username, onLogout }: {
+  apiOnline: boolean
+  onOpenSettings: () => void
+  onOpenGlossary: () => void
+  username?: string | null
+  onLogout?: () => void
+}) {
   const [active, setActive] = useState('sec-1')
   const [deepOpen, setDeepOpen] = useState(false)
 
@@ -132,6 +138,18 @@ export default function Sidebar({ apiOnline, onOpenSettings, onOpenGlossary }: {
           </div>
         )}
       </nav>
+
+      {username && (
+        <div className="mx-4 mb-4 rounded-[10px] px-3.5 py-3 flex items-center justify-between gap-2" style={{ background: '#FFFFFF', border: '1px solid #D7D9CD' }}>
+          <div className="min-w-0">
+            <div className="text-[10px] font-semibold tracking-wide uppercase" style={{ color: '#5C7370' }}>Signed in as</div>
+            <div className="text-[13px] font-semibold truncate" style={{ color: '#151912' }}>{username}</div>
+          </div>
+          <button onClick={onLogout} title="Log out" className="flex-none text-neutral-400 hover:text-[#A6392F] transition-colors">
+            <LogOut size={15} />
+          </button>
+        </div>
+      )}
 
       <div className="px-6 py-5 border-t border-black/5">
         <div className="flex items-center justify-between gap-2">

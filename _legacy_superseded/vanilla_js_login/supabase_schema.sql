@@ -3,9 +3,13 @@
 create table if not exists public.profiles (
   id uuid references auth.users on delete cascade primary key,
   email text,
+  username text,
   face_descriptor float8[],  -- 128-dim face-api.js descriptor, stored as an array
   created_at timestamptz default now()
 );
+
+-- If the table already existed without this column (pre-username build):
+-- alter table public.profiles add column if not exists username text;
 
 alter table public.profiles enable row level security;
 

@@ -1,8 +1,10 @@
 import { useEffect, useState, lazy, Suspense } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Cell, LineChart, Line, Legend, ReferenceLine,
 } from 'recharts'
+import { supabase } from '../lib/supabase'
 import { Search, CheckCircle2, AlertTriangle, RefreshCw, TriangleAlert, ShieldCheck, Sparkles, FileDown } from 'lucide-react'
 const Background3D = lazy(() => import('../components/Background3D'))
 import GlassCard from '../components/GlassCard'
@@ -112,7 +114,23 @@ export default function Dashboard() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings())
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [glossaryOpen, setGlossaryOpen] = useState(false)
-  const [supabaseConfigured, setSupabaseConfigured] = useState(false)
+  const [username, setUsername] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const user = data.user
+      if (!user) return
+      supabase.from('profiles').select('username').eq('id', user.id).single().then(({ data: profile }) => {
+        setUsername(profile?.username || user.email?.split('@')[0] || null)
+      })
+    })
+  }, [])
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    navigate('/account', { replace: true })
+  }
   const [retrainDepth, setRetrainDepth] = useState(settings.retrainDefaultDepth)
   const [retrainLeaf, setRetrainLeaf] = useState(settings.retrainDefaultLeaf)
   const [retrainBusy, setRetrainBusy] = useState(false)
@@ -148,7 +166,7 @@ export default function Dashboard() {
       .catch(e => setApiError(String(e)))
       .finally(() => setLoading(false))
 
-    api.health().then(h => { setLlmEnabled(h.llm_enabled); setSupabaseConfigured(h.supabase_configured) }).catch(() => setLlmEnabled(false))
+    api.health().then(h => setLlmEnabled(h.llm_enabled)).catch(() => setLlmEnabled(false))
     api.policyHistory().then(h => setHistory(h.history)).catch(() => {})
     // Loaded separately (not in the fail-fast Promise.all above) - a fresh
     // clone that hasn't run `python src/drift_monitor.py` yet shouldn't
@@ -429,7 +447,8 @@ export default function Dashboard() {
   return (
     <div className="relative min-h-screen">
       <Suspense fallback={null}><Background3D /></Suspense>
-      <Sidebar apiOnline={!apiError} onOpenSettings={() => setSettingsOpen(true)} onOpenGlossary={() => setGlossaryOpen(true)} />
+      <Sidebar apiOnline={!apiError} onOpenSettings={() => setSettingsOpen(true)} onOpenGlossary={() => setGlossaryOpen(true)}
+        username={username} onLogout={handleLogout} />
       <FeatureGlossary open={glossaryOpen} onClose={() => setGlossaryOpen(false)} />
       <SettingsPanel
         open={settingsOpen}
@@ -442,7 +461,6 @@ export default function Dashboard() {
           setRetrainLeaf(next.retrainDefaultLeaf)
         }}
         llmEnabled={llmEnabled}
-        supabaseConfigured={supabaseConfigured}
         apiOnline={!apiError}
       />
       <main className="pl-[272px]">

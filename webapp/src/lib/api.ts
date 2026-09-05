@@ -2,10 +2,16 @@
 // (backend/main.py mounts webapp/dist as static files), so API calls are
 // same-origin - no base URL needed, and no CORS involved at all. In dev,
 // vite serves the frontend on :5173 while uvicorn serves the API on
-// :8010, so an explicit base URL is required.
+// :8011, so an explicit base URL is required.
+//
+// TEMPORARY: was :8010. A stuck/unkillable stale backend process was still
+// holding :8010 with pre-fix code, so the dev API was moved to :8011 to
+// guarantee this points at the current code. Once you've fully stopped
+// whatever's on :8010 (restart your machine if needed) you can move this
+// back to :8010 and run uvicorn on the normal port again.
 import { supabase } from './supabase'
 
-const API_BASE = import.meta.env.PROD ? '' : 'http://localhost:8010'
+const API_BASE = import.meta.env.PROD ? '' : 'http://localhost:8011'
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`)
@@ -408,7 +414,6 @@ export interface CausalGraphResult {
 export interface HealthResult {
   status: string
   llm_enabled: boolean
-  supabase_configured: boolean
 }
 
 export interface DifficultyTierRow {
@@ -580,9 +585,9 @@ export const api = {
   // Server-side identity + face-match verification (backend/auth.py) - the
   // browser's own face-api.js comparison is UX feedback only; this call is
   // what actually mints the short-lived token /api/policy/approve requires.
-  getApprovalToken: (accessToken: string, faceDescriptor: number[]) =>
-    post<{ token: string; email: string; distance: number }>('/api/policy/approval-token', {
-      access_token: accessToken, face_descriptor: faceDescriptor,
+  getApprovalToken: (accessToken: string) =>
+    post<{ token: string; email: string }>('/api/policy/approval-token', {
+      access_token: accessToken,
     }),
   approvePolicyVersion: (version: number, approvalToken: string) =>
     post<PolicyHistoryEntry>('/api/policy/approve', { version, approval_token: approvalToken }),

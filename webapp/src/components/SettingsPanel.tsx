@@ -36,14 +36,13 @@ function SectionLabel({ icon, children }: { icon: React.ReactNode; children: Rea
 }
 
 export default function SettingsPanel({
-  open, onClose, settings, onSave, llmEnabled, supabaseConfigured, apiOnline,
+  open, onClose, settings, onSave, llmEnabled, apiOnline,
 }: {
   open: boolean
   onClose: () => void
   settings: Settings
   onSave: (next: Settings) => void
   llmEnabled: boolean
-  supabaseConfigured: boolean
   apiOnline: boolean
 }) {
   const [draft, setDraft] = useState<Settings>(settings)
@@ -188,7 +187,7 @@ export default function SettingsPanel({
                 )}
               </div>
               <p className="text-[11px] text-neutral-400 mt-2">
-                This is the reviewer identity used to approve a policy (section 5) — not required just to browse the dashboard.
+                This is the reviewer identity used to approve a policy (section 5) and to open the dashboard.
               </p>
             </div>
 
@@ -203,13 +202,6 @@ export default function SettingsPanel({
                   okText="Configured"
                   badText="Not configured"
                   hint={!llmEnabled ? 'Set GROQ_API_KEY in backend/.env, then restart the backend.' : undefined}
-                />
-                <StatusRow
-                  label="Supabase (identity/approval)"
-                  ok={supabaseConfigured}
-                  okText="Configured"
-                  badText="Not configured"
-                  hint={!supabaseConfigured ? 'Set SUPABASE_SERVICE_ROLE_KEY in backend/.env, then restart the backend.' : undefined}
                 />
               </div>
               <p className="text-[11px] text-neutral-400 mt-2">

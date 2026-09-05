@@ -1,0 +1,17 @@
+customer_id,transaction_date,amount,transaction_type,device_id,shipping_address_id
+cust_001,2024-01-05,1200,purchase,dev_A1,addr_100
+cust_001,2024-01-12,850,purchase,dev_A1,addr_100
+cust_002,2024-01-06,2200,purchase,dev_A1,addr_101
+cust_002,2024-01-20,500,refund,dev_A1,addr_101
+cust_003,2024-01-07,3400,purchase,dev_B2,addr_100
+cust_003,2024-02-01,1500,chargeback,dev_B2,addr_100
+cust_004,2024-01-09,700,purchase,dev_C3,addr_102
+cust_004,2024-01-15,900,purchase,dev_C3,addr_102
+cust_005,2024-01-10,4200,purchase,dev_D4,addr_103
+cust_005,2024-01-25,4200,chargeback,dev_D4,addr_103
+cust_006,2024-01-11,650,purchase,dev_E5,addr_104
+cust_007,2024-01-13,1800,purchase,dev_E5,addr_105
+cust_008,2024-01-14,300,purchase,dev_F6,addr_106
+cust_009,2024-01-16,5600,purchase,dev_G7,addr_100
+cust_009,2024-02-02,2000,refund,dev_G7,addr_100
+cust_010,2024-01-18,950,purchase,dev_H8,addr_107

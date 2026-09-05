@@ -273,5 +273,73 @@
         "threshold": "candidate's real Rs net value >= currently-hardened policy's"
       }
     ]
+  },
+  {
+    "version": 5,
+    "label": "v5 (retrained: depth=5, min_leaf=13)",
+    "created_at": "2026-09-05T04:10:04.468805+00:00",
+    "hyperparams": {
+      "max_depth": 5,
+      "min_samples_leaf": 13
+    },
+    "precision": 0.9795918367346939,
+    "recall": 1.0,
+    "fp": 1,
+    "fp_cost": 150.0,
+    "loss_prevented": 1463001.7295545328,
+    "total_test_loss": 1463001.7295545328,
+    "rule_text": "|--- escalation_ratio <= 8.32\n|   |--- escalation_ratio <= 7.41\n|   |   |--- device_sharing <= 0.50\n|   |   |   |--- class: 0\n|   |   |--- device_sharing >  0.50\n|   |   |   |--- class: 0\n|   |--- escalation_ratio >  7.41\n|   |   |--- class: 0\n|--- escalation_ratio >  8.32\n|   |--- max_amount <= 7606.72\n|   |   |--- class: 0\n|   |--- max_amount >  7606.72\n|   |   |--- account_age_at_escalation <= 22.50\n|   |   |   |--- class: 1\n|   |   |--- account_age_at_escalation >  22.50\n|   |   |   |--- class: 1\n",
+    "approved_by": "affan01@gmail.com",
+    "approved_at": "2026-09-05T06:30:30.837554+00:00",
+    "gates": [
+      {
+        "name": "Historical regression",
+        "detail": "precision 98.0%, recall 100.0% on held-out test set",
+        "passed": true,
+        "threshold": "precision >= 85% (this project's v1 baseline), recall >= 95%"
+      },
+      {
+        "name": "Adversarial coverage",
+        "detail": "86.7% of a fresh 2000-candidate realistic-archetype attack caught",
+        "passed": false,
+        "threshold": "coverage >= 90%"
+      },
+      {
+        "name": "Fairness",
+        "detail": "1 segment(s) flagged, severe=False",
+        "passed": true,
+        "threshold": "no segment with both >5x ratio AND >2% absolute FP rate"
+      },
+      {
+        "name": "Off-policy confidence",
+        "detail": "DR/DM agreement 96.3%",
+        "passed": true,
+        "threshold": "DR/DM agreement >= 80%"
+      },
+      {
+        "name": "Blast radius",
+        "detail": "1 flip(s) worth a human's attention",
+        "passed": true,
+        "threshold": "<= 15 flips worth review (else too large to hand-review before approval)"
+      },
+      {
+        "name": "Complexity",
+        "detail": "tree depth 3, 11 nodes, 7 feature(s)",
+        "passed": true,
+        "threshold": "depth <= 8 (an approver must be able to read the rule)"
+      },
+      {
+        "name": "Minimum evasion distance",
+        "detail": "0.146 normalized units via ['mid_amount']",
+        "passed": false,
+        "threshold": ">= 0.15 normalized units (or no evasion found at all)"
+      },
+      {
+        "name": "Economic value",
+        "detail": "Rs 1,462,202 vs currently-hardened policy's Rs 1,463,002",
+        "passed": false,
+        "threshold": "candidate's real Rs net value >= currently-hardened policy's"
+      }
+    ]
   }
 ]
