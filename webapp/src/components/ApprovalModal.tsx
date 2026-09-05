@@ -30,7 +30,7 @@ export default function ApprovalModal({ onClose, onApproved }: { onClose: () => 
     setMsg(null)
     if (!email || !password) { setMsg({ text: 'Enter your email and password.', type: 'error' }); return }
     setBusy(true)
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) { setMsg({ text: error.message, type: 'error' }); setBusy(false); return }
 
     const { data: sessionData } = await supabase.auth.getSession()

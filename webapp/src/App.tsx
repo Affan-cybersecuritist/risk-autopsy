@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import RequireAuth from './components/RequireAuth'
@@ -9,7 +10,8 @@ export default function App() {
     <AppBoot>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<RequireAuth><Dashboard /></RequireAuth>} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/console" element={<RequireAuth><Dashboard /></RequireAuth>} />
           <Route path="/account" element={<Login />} />
         </Routes>
       </BrowserRouter>

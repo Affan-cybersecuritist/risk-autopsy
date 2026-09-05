@@ -57,7 +57,7 @@ export default function Login() {
   // always resolves into the dashboard on its own once the animation reads.
   useEffect(() => {
     if (step !== 'greeting') return
-    const t = setTimeout(() => navigate('/'), 2600)
+    const t = setTimeout(() => navigate('/console'), 2600)
     return () => clearTimeout(t)
   }, [step, navigate])
 
